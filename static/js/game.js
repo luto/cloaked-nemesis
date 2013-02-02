@@ -1,4 +1,5 @@
 var comm = require('communication.js');
+var util = require('/player_util.js');
 var players = [];
 var game$ = $("#game");
 
@@ -6,6 +7,7 @@ exports.init = function()
 {
 	comm.init();
 	comm.listen('NEW_PLAYER', handleNewPlayer);
+	comm.listen('REMOVE_PLAYER', handleRemovePlayer);
 	comm.listen('PLAYER_MOVED', handlePlayerMoved);
 	document.addEventListener('keydown', handleKeyDown);
 };
@@ -13,7 +15,6 @@ exports.init = function()
 function handleNewPlayer(player)
 {
 	players.push(player);
-	console.log("New Player: " + player.id)
 	
 	game$.append('<div id="player_' + player.id + '"></div>');
 	$("#player_" + player.id)
@@ -23,9 +24,15 @@ function handleNewPlayer(player)
 	setPlayerPos(player);
 }
 
+function handleRemovePlayer(args)
+{
+  util.removePlayerById(players, args.id);
+  $("#player_" + args.id).remove();
+}
+
 function handlePlayerMoved(data)
 {
-	var player = players[data.id];
+	var player = util.getPlayerById(players, data.id);
 	player.X += data.X;
 	player.Y += data.Y;
   setPlayerPos(player);

@@ -1,7 +1,8 @@
 var app = require('http').createServer(handler)
   , io = require('socket.io').listen(app)
   , fs = require('fs')
-  , static = require('node-static');
+  , static = require('node-static')
+  , util = require('./player_util.js');
 
 app.listen(8080);
 var file = new(static.Server)();
@@ -16,6 +17,7 @@ io.sockets.on('connection', newConnection);
 
 var players = [];
 var sockets = [];
+var nextId = 0;
 
 function get_random_color() {
     var letters = '0123456789ABCDEF'.split('');
@@ -35,12 +37,13 @@ function newConnection(socket)
       player = 
         {
           name: data.name,
-          id: players.length,
+          id: nextId,
           X: 100,
           Y: 10,
           Health: 100,
           color: get_random_color()
         };
+      nextId++;
       
       // show the new client all the old clients
       for(var i = 0; i < players.length; i++)
@@ -65,6 +68,15 @@ function newConnection(socket)
           X: data.X,
           Y: data.Y
         });
+    });
+  
+  socket.on('disconnect', function(data)
+    {
+      if(!player)
+        return;
+      
+      util.removePlayerById(players, player.id);
+      broadcast('REMOVE_PLAYER', { id: player.id });
     });
 }
 

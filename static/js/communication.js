@@ -4,12 +4,14 @@ var eventListeners = [];
 exports.init = function ()
 {
 	eventListeners["NEW_PLAYER"] = [];
+	eventListeners["REMOVE_PLAYER"] = [];
 	eventListeners["PLAYER_MOVED"] = [];
 	
 	socket = io.connect('http://' + window.location.hostname + ':' + window.location.port);
 	socket.emit('HELLO', { name: 'luto' });
 
 	socket.on('NEW_PLAYER', handleNewPlayer);
+	socket.on('REMOVE_PLAYER', handleRemovePlayer);
 	socket.on('PLAYER_MOVED', handlePlayerMoved);
 };
 
@@ -31,9 +33,13 @@ function handleNewPlayer(data)
 	triggerEvent('NEW_PLAYER', data);
 }
 
+function handleRemovePlayer(data)
+{
+	triggerEvent('REMOVE_PLAYER', data);
+}
+
 function handlePlayerMoved(data)
 {
-	console.log(data)
 	triggerEvent('PLAYER_MOVED', data);
 }
 

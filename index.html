@@ -10,6 +10,7 @@
     <div id="game"></div>
     <script>
       require.setLibraryURI('/static/js');
+      require.setRootURI('http://' + window.location.hostname + ':' + window.location.port);
       
       var game = require('game.js');
       game.init();
