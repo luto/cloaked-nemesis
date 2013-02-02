@@ -26,6 +26,15 @@ io.sockets.on('connection', newConnection);
 var players = [];
 var sockets = [];
 
+function get_random_color() {
+    var letters = '0123456789ABCDEF'.split('');
+    var color = '#';
+    for (var i = 0; i < 6; i++ ) {
+        color += letters[Math.round(Math.random() * 15)];
+    }
+    return color;
+}
+
 function newConnection(socket)
 {
   var player;
@@ -38,7 +47,8 @@ function newConnection(socket)
           id: players.length,
           X: 100,
           Y: 10,
-          Health: 100
+          Health: 100,
+          color: get_random_color()
         };
       
       // show the new client all the old clients
