@@ -1,24 +1,15 @@
 var app = require('http').createServer(handler)
   , io = require('socket.io').listen(app)
   , fs = require('fs')
+  , static = require('node-static');
 
 app.listen(8080);
+var file = new(static.Server)();
 
 function handler (req, res) {
-  var url = req.url;
-  if(url == '/')
-    url = '/index.html';
-  
-  fs.readFile(__dirname + url,
-  function (err, data) {
-    if (err) {
-      res.writeHead(500);
-      return res.end('Error loading ' + url);
-    }
-
-    res.writeHead(200);
-    res.end(data);
-  });
+  if(req.url == "/")
+    req.url = "/index.html"
+  file.serve(req, res);
 }
 
 io.sockets.on('connection', newConnection);
