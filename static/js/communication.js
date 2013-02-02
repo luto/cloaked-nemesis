@@ -6,7 +6,7 @@ exports.init = function ()
 	eventListeners["NEW_PLAYER"] = [];
 	eventListeners["PLAYER_MOVED"] = [];
 	
-	socket = io.connect('http://localhost');
+	socket = io.connect('http://' + window.location.hostname + ':' + window.location.port);
 	socket.emit('HELLO', { name: 'luto' });
 
 	socket.on('NEW_PLAYER', handleNewPlayer);

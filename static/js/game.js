@@ -4,7 +4,6 @@ var game$ = $("#game");
 
 exports.init = function()
 {
-	console.log(comm)
 	comm.init();
 	comm.listen('NEW_PLAYER', handleNewPlayer);
 	comm.listen('PLAYER_MOVED', handlePlayerMoved);
