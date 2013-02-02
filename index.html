@@ -1,0 +1,18 @@
+<html>
+  <head>
+    <title>Cloaked Nemesis!</title>
+    <script src="/static/js/require-kernel.js"></script>
+    <script src="/static/js/jquery-1.9.0.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+  </head>
+  <body>
+    <div id="game"></div>
+    <script>
+      require.setLibraryURI('/static/js');
+      
+      var game = require('game.js');
+      game.init();
+    </script>
+  </body>
+</html>

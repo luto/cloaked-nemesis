@@ -1,0 +1,10 @@
+.player
+{
+	height: 50px;
+	width: 50px;
+	font-size: 30px;
+	position: absolute;
+	background-color: black;
+	color: white;
+	text-align: center;
+}
