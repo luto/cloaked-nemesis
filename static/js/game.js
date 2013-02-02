@@ -18,7 +18,7 @@ function handleNewPlayer(player)
 	game$.append('<div id="player_' + player.id + '"></div>');
 	$("#player_" + player.id)
 	  .addClass('player')
-          .css('color', player.color)
+	  .css('color', player.color)
 	  .text(player.id);
 	setPlayerPos(player);
 }
