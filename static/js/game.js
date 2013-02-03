@@ -1,7 +1,10 @@
 var comm = require('communication.js');
 var util = require('/player_util.js');
 var players = [];
-var game$ = $("#game");
+
+// collie.js
+var c_layer_players;
+var c_players = [];
 
 exports.init = function()
 {
@@ -10,18 +13,32 @@ exports.init = function()
 	comm.listen('REMOVE_PLAYER', handleRemovePlayer);
 	comm.listen('PLAYER_MOVED', handlePlayerMoved);
 	document.addEventListener('keydown', handleKeyDown);
+	
+	c_layer_players = new collie.Layer({ width: 320, height: 480 });
+	collie.Renderer.addLayer(c_layer_players);
+	collie.Renderer.load($("#game")[0]);
+	collie.Renderer.start("30fps");
 };
 
 function handleNewPlayer(player)
 {
 	players.push(player);
+	createPlayer(player);
+}
+
+function createPlayer(player)
+{
+	var c_player = new collie.MovableObject(
+		{
+			width : 50,
+			height : 50,
+			mass: 1,
+			backgroundColor: player.color,
+		});
 	
-	game$.append('<div id="player_' + player.id + '"></div>');
-	$("#player_" + player.id)
-	  .addClass('player')
-	  .css('color', player.color)
-	  .text(player.id);
+	c_players[player.id] = c_player;
 	setPlayerPos(player);
+	c_player.addTo(c_layer_players);
 }
 
 function handleRemovePlayer(args)
@@ -40,9 +57,11 @@ function handlePlayerMoved(data)
 
 function setPlayerPos(player)
 {
-	$("#player_" + player.id)
-		.css('top', player.Y)
-		.css('left', player.X);
+	c_players[player.id].set(
+		{
+			x : player.X,
+			y : player.Y,
+		});
 }
 
 function handleKeyDown(evt)
