@@ -30,8 +30,8 @@ function createPlayer(player)
 {
 	var c_player = new collie.MovableObject(
 		{
-			width : 50,
-			height : 50,
+			width : player.width,
+			height : player.height,
 			mass: 1,
 			backgroundColor: player.color,
 		});
@@ -44,14 +44,16 @@ function createPlayer(player)
 function handleRemovePlayer(args)
 {
   util.removePlayerById(players, args.id);
-  $("#player_" + args.id).remove();
+  c_layer_players.removeChild(c_players[args.id]);
+  delete c_players[args.id];
 }
 
 function handlePlayerMoved(data)
 {
 	var player = util.getPlayerById(players, data.id);
-	player.X += data.X;
-	player.Y += data.Y;
+	
+	player.x += data.x;
+	player.y += data.y;
   setPlayerPos(player);
 }
 
@@ -59,8 +61,8 @@ function setPlayerPos(player)
 {
 	c_players[player.id].set(
 		{
-			x : player.X,
-			y : player.Y,
+			x : player.x,
+			y : player.y,
 		});
 }
 

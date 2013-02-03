@@ -23,9 +23,9 @@ exports.listen = function (evt, func)
  	eventListeners[evt].push(func);
 }
 
-exports.sendMove = function (X, Y)
+exports.sendMove = function (x, y)
 {
-	socket.emit('MOVE', { X: X, Y: Y });
+	socket.emit('MOVE', { x: x, y: y });
 }
 
 function handleNewPlayer(data)

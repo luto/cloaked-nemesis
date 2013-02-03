@@ -38,8 +38,10 @@ function newConnection(socket)
         {
           name: data.name,
           id: nextId,
-          X: 100,
-          Y: 10,
+          x: 100,
+          y: 10,
+          height: 50,
+          width: 50,
           Health: 100,
           color: get_random_color()
         };
@@ -60,13 +62,17 @@ function newConnection(socket)
 
   socket.on('MOVE', function(data)
     {
-      player.X += data.X;
-      player.Y += data.Y;
+      var colls = util.getCollisions(players, player, data);
+      if(colls.length != 0)
+        return;
+      
+      player.x += data.x;
+      player.y += data.y;
       broadcast('PLAYER_MOVED',
         {
           id: player.id,
-          X: data.X,
-          Y: data.Y
+          x: data.x,
+          y: data.y
         });
     });
   
