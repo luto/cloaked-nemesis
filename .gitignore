@@ -1,2 +1,6 @@
 node_modules
 .DS_Store
+
+// reps, downloaded by getDeps.sh
+static/js/collie.min.js
+static/js/jquery-1.9.0.min.js
