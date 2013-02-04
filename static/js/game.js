@@ -9,8 +9,8 @@ var c_players = {};
 exports.init = function()
 {
 	comm.init();
-	comm.listen('NEW_PLAYER', handleNewPlayer);
-	comm.listen('REMOVE_PLAYER', handleRemovePlayer);
+	comm.listen('PLAYER_JOINED', handlePlayerJoined);
+	comm.listen('PLAYER_LEFT', handlePlayerLeft);
 	comm.listen('PLAYER_MOVED', handlePlayerMoved);
 	document.addEventListener('keydown', handleKeyDown);
 	
@@ -20,7 +20,7 @@ exports.init = function()
 	collie.Renderer.start("30fps");
 };
 
-function handleNewPlayer(player)
+function handlePlayerJoined(player)
 {
 	players[player.id] = player;
 	createPlayer(player);
@@ -41,11 +41,11 @@ function createPlayer(player)
 	c_player.addTo(c_layer_players);
 }
 
-function handleRemovePlayer(args)
+function handlePlayerLeft(data)
 {
-  c_layer_players.removeChild(c_players[args.id]);
-  delete c_players[args.id];
-  delete players[args.id];
+  c_layer_players.removeChild(c_players[data.id]);
+  delete c_players[data.id];
+  delete players[data.id];
 }
 
 function handlePlayerMoved(data)

@@ -3,16 +3,13 @@ var eventListeners = [];
 
 exports.init = function ()
 {
-	eventListeners["NEW_PLAYER"] = [];
-	eventListeners["REMOVE_PLAYER"] = [];
+	eventListeners["PLAYER_JOINED"] = [];
+	eventListeners["PLAYER_LEFT"] = [];
 	eventListeners["PLAYER_MOVED"] = [];
 	
 	socket = io.connect('http://' + window.location.hostname + ':' + window.location.port);
 	socket.emit('HELLO', { name: 'luto' });
-
-	socket.on('NEW_PLAYER', handleNewPlayer);
-	socket.on('REMOVE_PLAYER', handleRemovePlayer);
-	socket.on('PLAYER_MOVED', handlePlayerMoved);
+	socket.on('PAK', onPacket);
 };
 
 exports.listen = function (evt, func)
@@ -25,22 +22,12 @@ exports.listen = function (evt, func)
 
 exports.sendMove = function (x, y)
 {
-	socket.emit('MOVE', { x: x, y: y });
+	socket.emit('PAK', { type: 'MOVE', data: { x: x, y: y }});
 }
 
-function handleNewPlayer(data)
+function onPacket(pak)
 {
-	triggerEvent('NEW_PLAYER', data);
-}
-
-function handleRemovePlayer(data)
-{
-	triggerEvent('REMOVE_PLAYER', data);
-}
-
-function handlePlayerMoved(data)
-{
-	triggerEvent('PLAYER_MOVED', data);
+	triggerEvent(pak.type, pak.data);
 }
 
 function triggerEvent(evt, arg)
