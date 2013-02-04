@@ -22,10 +22,42 @@ exports.init = function (app)
   comm.init(app, this);
   box2d.b2Settings.b2_velocityThreshold = 0;
   var worldAABB = new box2d.b2AABB();
-  worldAABB.lowerBound.Set(0, 0);
+  worldAABB.lowerBound.Set(-25, -25);
   worldAABB.upperBound.Set(worldSize.width, worldSize.height);
-  world = new box2d.b2World(worldAABB, new box2d.b2Vec2(0, 9), false);
+  world = new box2d.b2World(worldAABB, new box2d.b2Vec2(0, 0), false);
   
+  // top
+  var groundBodyDef = new box2d.b2BodyDef();
+  groundBodyDef.position.Set(worldSize.width / 2, -25);
+  var groundBody = world.CreateBody(groundBodyDef);
+  var groundShapeDef = new box2d.b2PolygonDef();
+  groundShapeDef.SetAsBox(worldSize.width / 2 - 1, 0.001);
+  groundBody.CreateShape(groundShapeDef);
+
+  // bottom
+  var groundBodyDef = new box2d.b2BodyDef();
+  groundBodyDef.position.Set(worldSize.width / 2, worldSize.height - 25);
+  var groundBody = world.CreateBody(groundBodyDef);
+  var groundShapeDef = new box2d.b2PolygonDef();
+  groundShapeDef.SetAsBox(worldSize.width / 2 - 1, 0.001);
+  groundBody.CreateShape(groundShapeDef);
+
+  // left
+  var groundBodyDef = new box2d.b2BodyDef();
+  groundBodyDef.position.Set(-25, worldSize.height / 2);
+  var groundBody = world.CreateBody(groundBodyDef);
+  var groundShapeDef = new box2d.b2PolygonDef();
+  groundShapeDef.SetAsBox(0.001, worldSize.height / 2 - 1);
+  groundBody.CreateShape(groundShapeDef);
+
+  // right
+  var groundBodyDef = new box2d.b2BodyDef();
+  groundBodyDef.position.Set(worldSize.width - 25, worldSize.height / 2);
+  var groundBody = world.CreateBody(groundBodyDef);
+  var groundShapeDef = new box2d.b2PolygonDef();
+  groundShapeDef.SetAsBox(0.001, worldSize.height / 2 - 1);
+  groundBody.CreateShape(groundShapeDef);
+
   tickInterval = setInterval(worldStep, 50);
 }
 
@@ -99,7 +131,7 @@ exports.onPacket = function (id, type, data)
 
 function worldStep()
 {
-  world.Step(timeStep, 10);
+  world.Step(timeStep, 15, 15);
   
   var _bodies = {};
   
