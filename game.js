@@ -22,7 +22,7 @@ exports.init = function (app)
   var worldAABB = new box2d.b2AABB();
   worldAABB.lowerBound.Set(-1000, -1000);
   worldAABB.upperBound.Set( 1000,  1000);
-  world = new box2d.b2World(worldAABB, new box2d.b2Vec2(0, 0), true);
+  world = new box2d.b2World(worldAABB, new box2d.b2Vec2(0, 0), false);
   
   tickInterval = setInterval(worldStep, 50);
 }

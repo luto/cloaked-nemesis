@@ -1,4 +1,4 @@
-require("./simple-inheritance.js");
+require("./simple-Inheritance.js");
 
 exports.t_Entity = Class.extend({
       id: 0,
