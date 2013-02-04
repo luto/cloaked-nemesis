@@ -15,8 +15,8 @@ function handler (req, res) {
 
 io.sockets.on('connection', newConnection);
 
-var players = [];
-var sockets = [];
+var players = {};
+var sockets = {};
 var nextId = 0;
 
 function get_random_color() {
@@ -48,13 +48,13 @@ function newConnection(socket)
       nextId++;
       
       // show the new client all the old clients
-      for(var i = 0; i < players.length; i++)
+      for(var id in players)
       {
-        socket.emit('NEW_PLAYER', players[i]);
+        socket.emit('NEW_PLAYER', players[id]);
       }
       
-      players.push(player);
-      sockets.push(socket);
+      players[player.id] = player;
+      sockets[player.id] = socket;
       
       // show the old clients the new client
       broadcast('NEW_PLAYER', player);
@@ -81,17 +81,17 @@ function newConnection(socket)
       if(!player)
         return;
       
-      util.removePlayerById(players, player.id);
+      delete players[player.id];
       broadcast('REMOVE_PLAYER', { id: player.id });
     });
 }
 
 function broadcast(type, msg, except)
 {
-  for(var i = 0; i < sockets.length; i++)
+  for(var id in sockets)
   {
-    if(sockets[i] != except)
-      sockets[i].emit(type, msg);
+    if(sockets[id] != except)
+      sockets[id].emit(type, msg);
   }
 }
 

@@ -1,10 +1,10 @@
 var comm = require('communication.js');
 var util = require('/player_util.js');
-var players = [];
+var players = {};
 
 // collie.js
 var c_layer_players;
-var c_players = [];
+var c_players = {};
 
 exports.init = function()
 {
@@ -22,7 +22,7 @@ exports.init = function()
 
 function handleNewPlayer(player)
 {
-	players.push(player);
+	players[player.id] = player;
 	createPlayer(player);
 }
 
@@ -43,15 +43,14 @@ function createPlayer(player)
 
 function handleRemovePlayer(args)
 {
-  util.removePlayerById(players, args.id);
   c_layer_players.removeChild(c_players[args.id]);
   delete c_players[args.id];
+  delete players[args.id];
 }
 
 function handlePlayerMoved(data)
 {
-	var player = util.getPlayerById(players, data.id);
-	
+	var player = players[data.id];
 	player.x += data.x;
 	player.y += data.y;
   setPlayerPos(player);
