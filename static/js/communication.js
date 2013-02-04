@@ -5,7 +5,7 @@ exports.init = function ()
 {
 	eventListeners["PLAYER_JOINED"] = [];
 	eventListeners["PLAYER_LEFT"] = [];
-	eventListeners["PLAYER_MOVED"] = [];
+	eventListeners["PHYSICS"] = [];
 	
 	socket = io.connect('http://' + window.location.hostname + ':' + window.location.port);
 	socket.emit('HELLO', { name: 'luto' });

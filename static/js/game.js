@@ -1,6 +1,7 @@
 var comm = require('communication.js');
 var util = require('/player_util.js');
-var players = {};
+var types = require('/types.js');
+var entities = {};
 
 // collie.js
 var c_layer_players;
@@ -11,7 +12,7 @@ exports.init = function()
 	comm.init();
 	comm.listen('PLAYER_JOINED', handlePlayerJoined);
 	comm.listen('PLAYER_LEFT', handlePlayerLeft);
-	comm.listen('PLAYER_MOVED', handlePlayerMoved);
+	comm.listen('PHYSICS', handlePhysicsUpdate);
 	document.addEventListener('keydown', handleKeyDown);
 	
 	c_layer_players = new collie.Layer({ width: 320, height: 480 });
@@ -20,10 +21,13 @@ exports.init = function()
 	collie.Renderer.start("30fps");
 };
 
-function handlePlayerJoined(player)
+function handlePlayerJoined(entity)
 {
-	players[player.id] = player;
-	createPlayer(player);
+	entity = types.getObj(entity.__type, entity);
+	entities[entity.id] = entity;
+	
+	if(entity instanceof types.t_Player)
+	  createPlayer(entity);
 }
 
 function createPlayer(player)
@@ -45,15 +49,18 @@ function handlePlayerLeft(data)
 {
   c_layer_players.removeChild(c_players[data.id]);
   delete c_players[data.id];
-  delete players[data.id];
+  delete entities[data.id];
 }
 
-function handlePlayerMoved(data)
+function handlePhysicsUpdate(data)
 {
-	var player = players[data.id];
-	player.x += data.x;
-	player.y += data.y;
-  setPlayerPos(player);
+	for(var id in data.bodies)
+	{
+	  entities[id].x = data.bodies[id].x;
+	  entities[id].y = data.bodies[id].y;
+	  
+	  setPlayerPos(entities[id]);
+	}
 }
 
 function setPlayerPos(player)
@@ -67,7 +74,7 @@ function setPlayerPos(player)
 
 function handleKeyDown(evt)
 {
-	var dist = 3;
+	var dist = 300;
 	if(evt.keyCode == 37) // left
 	{
 		comm.sendMove(dist * -1, 0);
