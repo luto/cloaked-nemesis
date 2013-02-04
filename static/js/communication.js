@@ -3,12 +3,14 @@ var eventListeners = [];
 
 exports.init = function ()
 {
+  eventListeners["HELLO"] = [];
 	eventListeners["PLAYER_JOINED"] = [];
 	eventListeners["PLAYER_LEFT"] = [];
 	eventListeners["PHYSICS"] = [];
 	
 	socket = io.connect('http://' + window.location.hostname + ':' + window.location.port);
 	socket.emit('HELLO', { name: 'luto' });
+	socket.on('HELLO', onHello);
 	socket.on('PAK', onPacket);
 };
 
@@ -23,6 +25,11 @@ exports.listen = function (evt, func)
 exports.sendMove = function (x, y)
 {
 	socket.emit('PAK', { type: 'MOVE', data: { x: x, y: y }});
+}
+
+function onHello(pak)
+{
+  triggerEvent('HELLO', pak);
 }
 
 function onPacket(pak)

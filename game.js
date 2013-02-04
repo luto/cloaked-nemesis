@@ -3,6 +3,8 @@ var util = require('./player_util.js')
 var types = require('./types.js');
 var box2d = require('box2d');
 
+var worldSize = { width: 500, height: 500 }
+
 // entities
 var nextId = 0;
 var entities = {};
@@ -20,9 +22,9 @@ exports.init = function (app)
   comm.init(app, this);
   box2d.b2Settings.b2_velocityThreshold = 0;
   var worldAABB = new box2d.b2AABB();
-  worldAABB.lowerBound.Set(-1000, -1000);
-  worldAABB.upperBound.Set( 1000,  1000);
-  world = new box2d.b2World(worldAABB, new box2d.b2Vec2(0, 0), false);
+  worldAABB.lowerBound.Set(0, 0);
+  worldAABB.upperBound.Set(worldSize.width, worldSize.height);
+  world = new box2d.b2World(worldAABB, new box2d.b2Vec2(0, 9), false);
   
   tickInterval = setInterval(worldStep, 50);
 }
@@ -42,6 +44,8 @@ exports.onNewPlayer = function (data, cb)
   
   // tell the socket its ID
   cb(player.id);
+  
+  comm.emit(player.id, 'HELLO', { id: player.id, worldSize: worldSize });
   
   // show the new client all the old clients
   for(var id in entities)

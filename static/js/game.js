@@ -13,9 +13,16 @@ exports.init = function()
 	comm.listen('PLAYER_JOINED', handlePlayerJoined);
 	comm.listen('PLAYER_LEFT', handlePlayerLeft);
 	comm.listen('PHYSICS', handlePhysicsUpdate);
+	comm.listen('HELLO', handleHello);
+};
+
+function handleHello(data)
+{
 	document.addEventListener('keydown', handleKeyDown);
 	
-	c_layer_players = new collie.Layer({ width: 320, height: 480 });
+	c_layer_players = new collie.Layer({ width: data.worldSize.width,
+		                                   height: data.worldSize.height });
+	
 	collie.Renderer.addLayer(c_layer_players);
 	collie.Renderer.load($("#game")[0]);
 	collie.Renderer.start("30fps");
