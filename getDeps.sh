@@ -2,7 +2,6 @@
 
 npm install socket.io
 npm install node-static
-npm install box2d
 
 cd static/js/
 

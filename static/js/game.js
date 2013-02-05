@@ -81,7 +81,7 @@ function setPlayerPos(player)
 
 function handleKeyDown(evt)
 {
-  var dist = 300;
+  var dist = 3;
   if(evt.keyCode == 37) // left
   {
     comm.sendMove(dist * -1, 0);

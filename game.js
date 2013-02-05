@@ -1,9 +1,7 @@
 var comm = require('./communication.js');
 var util = require('./player_util.js')
 var types = require('./types.js');
-var box2d = require('box2d');
-
-var worldSize = { width: 500, height: 500 }
+require('./Box2dWeb-2.1.a.3.js');
 
 // entities
 var nextId = 0;
@@ -12,53 +10,21 @@ var entities = {};
 // box2d
 var world = null;
 var tickInterval;
-var fps = 30.0;
+var fps = 60.0;
 var timeStep = 1 / fps;
 var bodies = {};
+
+var mpp = 64;
+var worldSize = { width: 500 / mpp, height: 500 / mpp }
 
 
 exports.init = function (app)
 {
   comm.init(app, this);
-  box2d.b2Settings.b2_velocityThreshold = 0;
-  var worldAABB = new box2d.b2AABB();
-  worldAABB.lowerBound.Set(-25, -25);
-  worldAABB.upperBound.Set(worldSize.width, worldSize.height);
-  world = new box2d.b2World(worldAABB, new box2d.b2Vec2(0, 0), false);
-  
-  // top
-  var groundBodyDef = new box2d.b2BodyDef();
-  groundBodyDef.position.Set(worldSize.width / 2, -25);
-  var groundBody = world.CreateBody(groundBodyDef);
-  var groundShapeDef = new box2d.b2PolygonDef();
-  groundShapeDef.SetAsBox(worldSize.width / 2 - 1, 0.001);
-  groundBody.CreateShape(groundShapeDef);
+  Box2D.Common.b2Settings.b2_velocityThreshold = 0;
+  world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 0), false);
 
-  // bottom
-  var groundBodyDef = new box2d.b2BodyDef();
-  groundBodyDef.position.Set(worldSize.width / 2, worldSize.height - 25);
-  var groundBody = world.CreateBody(groundBodyDef);
-  var groundShapeDef = new box2d.b2PolygonDef();
-  groundShapeDef.SetAsBox(worldSize.width / 2 - 1, 0.001);
-  groundBody.CreateShape(groundShapeDef);
-
-  // left
-  var groundBodyDef = new box2d.b2BodyDef();
-  groundBodyDef.position.Set(-25, worldSize.height / 2);
-  var groundBody = world.CreateBody(groundBodyDef);
-  var groundShapeDef = new box2d.b2PolygonDef();
-  groundShapeDef.SetAsBox(0.001, worldSize.height / 2 - 1);
-  groundBody.CreateShape(groundShapeDef);
-
-  // right
-  var groundBodyDef = new box2d.b2BodyDef();
-  groundBodyDef.position.Set(worldSize.width - 25, worldSize.height / 2);
-  var groundBody = world.CreateBody(groundBodyDef);
-  var groundShapeDef = new box2d.b2PolygonDef();
-  groundShapeDef.SetAsBox(0.001, worldSize.height / 2 - 1);
-  groundBody.CreateShape(groundShapeDef);
-
-  tickInterval = setInterval(worldStep, 50);
+  tickInterval = setInterval(worldStep, 1000 / fps);
 }
 
 exports.onNewPlayer = function (data, cb)
@@ -77,7 +43,7 @@ exports.onNewPlayer = function (data, cb)
   // tell the socket its ID
   cb(player.id);
   
-  comm.emit(player.id, 'HELLO', { id: player.id, worldSize: worldSize });
+  comm.emit(player.id, 'HELLO', { id: player.id, worldSize: { width: worldSize.width * mpp, height: worldSize.height * mpp } });
   
   // show the new client all the old clients
   for(var id in entities)
@@ -88,22 +54,22 @@ exports.onNewPlayer = function (data, cb)
   // save the generated player-object
   entities[player.id] = player;
   
-  
-  var bodyDef = new box2d.b2BodyDef();
-  bodyDef.position.Set(player.x, player.y);
+  var bodyDef = new Box2D.Dynamics.b2BodyDef;
+  var fixDef = new Box2D.Dynamics.b2FixtureDef;
+  fixDef.density = 1.0;
+  fixDef.friction = 0.5;
+  fixDef.restitution = 0.2;
+  bodyDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
   bodyDef.userData = player.id;
-  bodyDef.fixedRotation = true 
-  
+  bodyDef.fixedRotation = true;
+
+  fixDef.shape = new Box2D.Collision.Shapes.b2PolygonShape;
+  fixDef.shape.SetAsBox((player.width / 2) / mpp, (player.height / 2) / mpp);
+  bodyDef.position.x = player.x / mpp;
+  bodyDef.position.y = player.y / mpp;
   var body = world.CreateBody(bodyDef);
-  
-  var shape = new box2d.b2PolygonDef();
-  shape.SetAsBox(player.height / 2, player.width / 2);
-  shape.density = 1;
-  shape.friction = 0.01;
-  
-  body.CreateShape(shape);
-  body.SetMassFromShapes();
-  
+  body.CreateFixture(fixDef);
+
   bodies[player.id] = body;
   
   
@@ -125,7 +91,7 @@ exports.onPacket = function (id, type, data)
   if(type == "MOVE")
   {
     var player = entities[id];
-    bodies[id].SetLinearVelocity(new box2d.b2Vec2(data.x, data.y));
+    bodies[id].SetLinearVelocity(new Box2D.Common.Math.b2Vec2(data.x, data.y));
   }
 }
 
@@ -141,12 +107,12 @@ function worldStep()
     
     _bodies[b] =
       {
-        x : pos.x,
-        y : pos.y
+        x : pos.x * mpp,
+        y : pos.y * mpp
       };
     
-    entities[b].x = pos.x;
-    entities[b].y = pos.y;
+    entities[b].x = _bodies[b].x;
+    entities[b].y = _bodies[b].y;
   }
   
   comm.broadcast('PHYSICS', { bodies : _bodies });
