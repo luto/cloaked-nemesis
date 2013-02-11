@@ -7,6 +7,7 @@ exports.init = function ()
   eventListeners["PLAYER_JOINED"] = [];
   eventListeners["PLAYER_LEFT"] = [];
   eventListeners["PHYSICS"] = [];
+  eventListeners["CHAT"] = [];
 }
 
 exports.connect = function ()
@@ -32,6 +33,11 @@ exports.sendMove = function (x, y)
 exports.sendHello = function (nickname)
 {
   socket.emit('HELLO', { name: nickname });
+}
+
+exports.sendChatMessage = function (msg)
+{
+  socket.emit('PAK', { type: 'CHAT', data: { msg: msg }});
 }
 
 function onHello(pak)

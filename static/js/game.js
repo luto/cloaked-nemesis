@@ -17,6 +17,7 @@ exports.init = function()
   comm.listen('PLAYER_JOINED', handlePlayerJoined);
   comm.listen('PLAYER_LEFT', handlePlayerLeft);
   comm.listen('PHYSICS', handlePhysicsUpdate);
+  comm.listen('CHAT', handleChat);
   comm.listen('HELLO', handleHello);
   comm.connect();
 };
@@ -32,6 +33,11 @@ exports.start = function(nickname)
   collie.Renderer.addLayer(c_layer_players);
   collie.Renderer.load($("#game")[0]);
   collie.Renderer.start("30fps");
+}
+
+exports.sendChatMessage = function (msg)
+{
+  comm.sendChatMessage(msg);
 }
 
 function handleHello(data)
@@ -85,6 +91,12 @@ function handlePhysicsUpdate(data)
     
     setPlayerPos(entities[id]);
   }
+}
+
+function handleChat(data)
+{
+  var name = entities[data.sender].name;
+  gameConsole.chatMessage(name, data.msg);
 }
 
 function setPlayerPos(player)

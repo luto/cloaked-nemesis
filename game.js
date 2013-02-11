@@ -97,6 +97,10 @@ exports.onPacket = function (id, type, data)
     var player = entities[id];
     bodies[id].SetLinearVelocity(new Box2D.Common.Math.b2Vec2(data.x, data.y));
   }
+  else if(type == "CHAT")
+  {
+    comm.broadcast('CHAT', { msg: data.msg, sender: id });
+  }
 }
 
 function worldStep()

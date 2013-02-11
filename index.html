@@ -13,6 +13,11 @@
   <body>
     <div id="game">
       <div id="messages">
+        <div id="log"></div>
+        <div id="chat">
+          <label for="chat-txt">Nachricht: </label>
+          <input type="text" name="chat-txt" id="chat-txt"/>
+        </div>
       </div>
     </div>
     <div id="login">
@@ -35,6 +40,22 @@
       
       var game = require('game.js');
       game.init();
+
+      $('#chat-txt').keypress(function (e)
+        {
+          if (e.which == 13)
+          {
+            e.preventDefault();
+
+            if($('#chat-txt').val().length != 0)
+            {
+              game.sendChatMessage($('#chat-txt').val());
+              $('#chat-txt').val('');
+            }
+
+            return false;
+          }
+        });
 
       if($.getQuery().nick)
       {

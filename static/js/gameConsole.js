@@ -1,9 +1,9 @@
-var messages$;
+var log$;
 var msgCounter;
 
 exports.init = function ()
 {
-  messages$ = $('#messages');
+  log$ = $('#messages');
   msgCounter = 0;
 }
 
@@ -13,7 +13,7 @@ exports.addMessage = function (msg)
 
   var html = $('<p class="message" id="msg' + id + '"></p>');
   html.text(msg);
-  messages$.append(html);
+  log$.append(html);
 
   setTimeout(function () { removeMessage(id) }, 1500);
 
@@ -25,9 +25,14 @@ exports.playerJoined = function (nickname)
   exports.addMessage('Player joined: ' + nickname);
 }
 
-exports.playerLeft = function (nickname, reason)
+exports.playerLeft = function (nickname)
 {
   exports.addMessage('Player left: ' + nickname);
+}
+
+exports.chatMessage = function (nickname, message)
+{
+  exports.addMessage(nickname + ': ' + message);
 }
 
 function removeMessage(id)
