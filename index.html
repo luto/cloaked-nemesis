@@ -19,6 +19,12 @@
     </div>
 
     <script>
+      if(navigator.userAgent.toLowerCase().indexOf('chrome') == -1)
+      {
+        $('#login').width($('#login').width() + 25);
+        $('#login-btn').css('margin-right', 2);
+      }
+
       require.setLibraryURI('/static/js');
       require.setRootURI('http://' + window.location.hostname + ':' + window.location.port);
       
@@ -28,6 +34,13 @@
       $("#login-btn").click(function ()
       {
         var nickname = $("#login-nickname").val();
+
+        if(nickname.length == 0)
+        {
+          $("label[for=login-nickname]").css('color', 'red');
+          return;
+        }
+
         $('#login-game-title').fadeOut(1000);
         setTimeout(function()
           {
