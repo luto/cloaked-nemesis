@@ -35,6 +35,12 @@ exports.onNewConnection = function (socket)
 
 exports.onNewPlayer = function (data, cb)
 {
+  if(!data.name.match(/^[a-zA-ZüäöÜÄÖß]+$/))
+  {
+    cb(-1);
+    return;
+  }
+
   player = new types.t_Player(nextId);
   player.x = worldCenter.x * mpp - player.width / 2;
   player.y = worldCenter.y * mpp - player.height / 2;

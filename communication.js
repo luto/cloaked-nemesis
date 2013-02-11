@@ -37,9 +37,16 @@ function newConnection(socket)
     {
       game.onNewPlayer(data, function (data)
         {
-          id = data;
-          sockets[id] = socket;
-          socket.on('PAK', function (data) { onPacket(id, data); });
+          if(data == -1)
+          {
+            socket.disconnect();
+          }
+          else
+          {
+            id = data;
+            sockets[id] = socket;
+            socket.on('PAK', function (data) { onPacket(id, data); });
+          }
         })
     });
   

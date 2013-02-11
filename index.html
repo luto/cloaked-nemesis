@@ -69,11 +69,12 @@
         {
           var nickname = $("#login-nickname").val();
 
-          if(nickname.length == 0)
+          if(!nickname.match(/^[a-zA-ZüäöÜÄÖß]+$/))
           {
             $("label[for=login-nickname]").css('color', 'red');
             return;
           }
+          $("label[for=login-nickname]").css('color', '');
 
           $('#login-game-title').fadeOut(1000);
           setTimeout(function()
