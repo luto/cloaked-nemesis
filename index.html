@@ -3,13 +3,18 @@
     <title>Cloaked Nemesis!</title>
     <script src="/static/js/require-kernel.js"></script>
     <script src="/static/js/jquery-1.9.0.min.js"></script>
+    <script src="/static/js/jquery-queryParser.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/static/js/collie.min.js"></script>
     <link href='http://fonts.googleapis.com/css?family=Vollkorn' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/game.css">
   </head>
   <body>
-    <div id="game"></div>
+    <div id="game">
+      <div id="messages">
+      </div>
+    </div>
     <div id="login">
       <h1 id="login-game-title">Cloaked-Nemesis</h1>
       <span id="login-title">Login</span>
@@ -31,27 +36,36 @@
       var game = require('game.js');
       game.init();
 
-      $("#login-btn").click(function ()
+      if($.getQuery().nick)
       {
-        var nickname = $("#login-nickname").val();
-
-        if(nickname.length == 0)
+        $('#login').hide();
+        $('#game').show();
+        setTimeout(function () { game.start($.getQuery().nick); }, 500);
+      }
+      else
+      {
+        $("#login-btn").click(function ()
         {
-          $("label[for=login-nickname]").css('color', 'red');
-          return;
-        }
+          var nickname = $("#login-nickname").val();
 
-        $('#login-game-title').fadeOut(1000);
-        setTimeout(function()
+          if(nickname.length == 0)
           {
-            $('#login').fadeOut(500, function ()
-              {
-                $('#game').fadeIn(300);
-              });
-          }, 650);
+            $("label[for=login-nickname]").css('color', 'red');
+            return;
+          }
 
-        game.start(nickname);
-      });
+          $('#login-game-title').fadeOut(1000);
+          setTimeout(function()
+            {
+              $('#login').fadeOut(500, function ()
+                {
+                  $('#game').fadeIn(300);
+                });
+            }, 650);
+
+          game.start(nickname);
+        });
+      }
     </script>
   </body>
 </html>

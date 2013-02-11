@@ -1,4 +1,5 @@
 var comm = require('communication.js');
+var gameConsole = require('gameconsole.js');
 var util = require('/player_util.js');
 var types = require('/types.js');
 var entities = {};
@@ -11,6 +12,8 @@ var c_players = {};
 exports.init = function()
 {
   comm.init();
+  gameConsole.init();
+
   comm.listen('PLAYER_JOINED', handlePlayerJoined);
   comm.listen('PLAYER_LEFT', handlePlayerLeft);
   comm.listen('PHYSICS', handlePhysicsUpdate);
@@ -42,7 +45,10 @@ function handlePlayerJoined(entity)
   entities[entity.id] = entity;
   
   if(entity instanceof types.t_Player)
+  {
     createPlayer(entity);
+    gameConsole.playerJoined(entity.name);
+  }
 }
 
 function createPlayer(player)
@@ -62,6 +68,9 @@ function createPlayer(player)
 
 function handlePlayerLeft(data)
 {
+  if(entities[data.id] instanceof types.t_Player)
+    gameConsole.playerLeft(entities[data.id].name);
+
   c_layer_players.removeChild(c_players[data.id]);
   delete c_players[data.id];
   delete entities[data.id];
