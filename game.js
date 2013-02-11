@@ -27,6 +27,11 @@ exports.init = function (app)
   tickInterval = setInterval(worldStep, 1000 / fps);
 }
 
+exports.onNewConnection = function (socket)
+{
+  socket.emit('HELLO', { worldSize: { width: worldSize.width * mpp, height: worldSize.height * mpp } });
+}
+
 exports.onNewPlayer = function (data, cb)
 {
   player = new types.t_Player(nextId);
@@ -42,8 +47,6 @@ exports.onNewPlayer = function (data, cb)
   
   // tell the socket its ID
   cb(player.id);
-  
-  comm.emit(player.id, 'HELLO', { id: player.id, worldSize: { width: worldSize.width * mpp, height: worldSize.height * mpp } });
   
   // show the new client all the old clients
   for(var id in entities)

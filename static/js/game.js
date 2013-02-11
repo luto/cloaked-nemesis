@@ -2,6 +2,7 @@ var comm = require('communication.js');
 var util = require('/player_util.js');
 var types = require('/types.js');
 var entities = {};
+var worldSize;
 
 // collie.js
 var c_layer_players;
@@ -14,18 +15,25 @@ exports.init = function()
   comm.listen('PLAYER_LEFT', handlePlayerLeft);
   comm.listen('PHYSICS', handlePhysicsUpdate);
   comm.listen('HELLO', handleHello);
+  comm.connect();
 };
 
-function handleHello(data)
+exports.start = function(nickname)
 {
+  comm.sendHello(nickname);
+
   document.addEventListener('keydown', handleKeyDown);
-  
-  c_layer_players = new collie.Layer({ width: data.worldSize.width,
-                                       height: data.worldSize.height });
+  c_layer_players = new collie.Layer({ width: worldSize.width,
+                                       height: worldSize.height });
   
   collie.Renderer.addLayer(c_layer_players);
   collie.Renderer.load($("#game")[0]);
   collie.Renderer.start("30fps");
+}
+
+function handleHello(data)
+{
+  worldSize = data.worldSize;
 }
 
 function handlePlayerJoined(entity)

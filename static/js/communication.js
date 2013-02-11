@@ -7,12 +7,14 @@ exports.init = function ()
   eventListeners["PLAYER_JOINED"] = [];
   eventListeners["PLAYER_LEFT"] = [];
   eventListeners["PHYSICS"] = [];
-  
+}
+
+exports.connect = function ()
+{
   socket = io.connect('http://' + window.location.hostname + ':' + window.location.port);
-  socket.emit('HELLO', { name: 'luto' });
   socket.on('HELLO', onHello);
   socket.on('PAK', onPacket);
-};
+}
 
 exports.listen = function (evt, func)
 {
@@ -25,6 +27,11 @@ exports.listen = function (evt, func)
 exports.sendMove = function (x, y)
 {
   socket.emit('PAK', { type: 'MOVE', data: { x: x, y: y }});
+}
+
+exports.sendHello = function (nickname)
+{
+  socket.emit('HELLO', { name: nickname });
 }
 
 function onHello(pak)

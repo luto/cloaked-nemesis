@@ -30,6 +30,8 @@ exports.emit = function(id, type, data)
 function newConnection(socket)
 {
   var id = -1;
+
+  game.onNewConnection(socket);
   
   socket.on('HELLO', function (data)
     {

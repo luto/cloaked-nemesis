@@ -5,15 +5,40 @@
     <script src="/static/js/jquery-1.9.0.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/static/js/collie.min.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Vollkorn' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/static/css/main.css">
   </head>
   <body>
     <div id="game"></div>
+    <div id="login">
+      <h1 id="login-game-title">Cloaked-Nemesis</h1>
+      <span id="login-title">Login</span>
+      <label for="login-nickname">Nickname:</label>
+      <input type="text" name="login-nickname" id="login-nickname"/><br>
+      <button type="button" id="login-btn">Login!</button>
+    </div>
+
     <script>
       require.setLibraryURI('/static/js');
       require.setRootURI('http://' + window.location.hostname + ':' + window.location.port);
       
       var game = require('game.js');
       game.init();
+
+      $("#login-btn").click(function ()
+      {
+        var nickname = $("#login-nickname").val();
+        $('#login-game-title').fadeOut(1000);
+        setTimeout(function()
+          {
+            $('#login').fadeOut(500, function ()
+              {
+                $('#game').fadeIn(300);
+              });
+          }, 650);
+
+        game.start(nickname);
+      });
     </script>
   </body>
 </html>
