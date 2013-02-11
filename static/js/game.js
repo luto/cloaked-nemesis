@@ -1,5 +1,5 @@
 var comm = require('communication.js');
-var gameConsole = require('gameconsole.js');
+var gameConsole = require('gameConsole.js');
 var util = require('/player_util.js');
 var types = require('/types.js');
 var entities = {};
