@@ -6,8 +6,8 @@
 #login-game-title
 {
     position: absolute;
-    top: -120px;
-    left: -140px;
+    top: -100px;
+    left: 40px;
     font-size: 3em;
     color: darkred;
 }
@@ -19,10 +19,10 @@
     top: 50%;
     left: 50%;
     margin-top: -30px;
-    margin-left: -102px;
+    margin-left: -207px;
 
-    height: 50px;
-    width: 210px;
+    height: 26px;
+    width: 400px;
     text-align: center;
     background-color: #BBB;
     border-radius: 10px;
@@ -30,23 +30,9 @@
     color: #FFF;
 }
 
-#login-title
-{
-    position: absolute;
-    top: -22px;
-    left: -5px;
-    font-size: 120%;
-    background-color: #BBB;
-    padding: 5px;
-    border-radius: 10px;
-}
-
 #login-btn
 {
-    float: right;
     height: 22px;
     width: 50px;
-    margin-top: 8px;
-    margin-right: 7px;
     color: #444;
 }

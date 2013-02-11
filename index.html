@@ -5,6 +5,7 @@
     <script src="/static/js/require-kernel.js"></script>
     <script src="/static/js/jquery-1.9.0.min.js"></script>
     <script src="/static/js/jquery-queryParser.min.js"></script>
+    <script src="/static/js/jquery.animate-colors-min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/static/js/collie.min.js"></script>
     <link href='http://fonts.googleapis.com/css?family=Vollkorn' rel='stylesheet' type='text/css'>
@@ -24,9 +25,8 @@
     </div>
     <div id="login">
       <h1 id="login-game-title">Cloaked-Nemesis</h1>
-      <span id="login-title">Login</span>
       <label for="login-nickname">Nickname:</label>
-      <input type="text" name="login-nickname" id="login-nickname"/><br>
+      <input type="text" name="login-nickname" id="login-nickname"/>
       <button type="button" id="login-btn">Login!</button>
     </div>
 
@@ -86,10 +86,10 @@
 
         if(!nickname.match(/^[a-zA-ZüäöÜÄÖß]+$/))
         {
-          $("label[for=login-nickname]").css('color', 'red');
+          $("#login").css('background-color', '#F44');
           return;
         }
-        $("label[for=login-nickname]").css('color', '');
+        $("#login").css('background-color', '');
 
         $('#login-game-title').fadeOut(1000);
         setTimeout(function()
