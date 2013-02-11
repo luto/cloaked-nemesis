@@ -47,6 +47,8 @@ function newConnection(socket)
             sockets[id] = socket;
             socket.on('PAK', function (data) { onPacket(id, data); });
           }
+
+          socket.removeAllListeners('HELLO');
         })
     });
   
