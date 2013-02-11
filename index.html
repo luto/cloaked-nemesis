@@ -15,11 +15,11 @@
   <body>
     <div id="game">
       <div id="messages">
-        <div id="log"></div>
         <div id="chat">
-          <label for="chat-txt">Nachricht: </label>
+          <label for="chat-txt">Message: </label>
           <input type="text" name="chat-txt" id="chat-txt"/>
         </div>
+        <div id="log"></div>
       </div>
     </div>
     <div id="login">
@@ -58,7 +58,7 @@
             return false;
           }
         });
-        $('#login-nickname').focus();
+      $('#login-nickname').focus();
 
       if($.getQuery().nick)
       {

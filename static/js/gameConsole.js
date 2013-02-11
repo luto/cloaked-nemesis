@@ -1,10 +1,12 @@
 var log$;
 var msgCounter;
+var maxMessages;
 
 exports.init = function ()
 {
-  log$ = $('#messages');
+  log$ = $('#log');
   msgCounter = 0;
+  maxMessages = 10;
 }
 
 exports.addMessage = function (msg)
@@ -15,8 +17,12 @@ exports.addMessage = function (msg)
   html.text(msg);
   log$.append(html);
 
-  setTimeout(function () { removeMessage(id) }, 5000);
-
+  if(log$.children().length > maxMessages)
+  {
+    removeMessage(log$.children().slice(0, log$.children().length - maxMessages));
+  }
+  
+  setTimeout(function () { removeMessage(html) }, 30000);
   msgCounter++;
 }
 
@@ -35,8 +41,7 @@ exports.chatMessage = function (nickname, message)
   exports.addMessage(nickname + ': ' + message);
 }
 
-function removeMessage(id)
+function removeMessage(msg$)
 {
-  var msg$ = $('#msg' + id);
   msg$.fadeOut(1500, function() { msg$.remove(); });
 }
