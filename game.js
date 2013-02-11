@@ -16,6 +16,7 @@ var bodies = {};
 
 var mpp = 64;
 var worldSize = { width: 500 / mpp, height: 500 / mpp }
+var worldCenter = { x: worldSize.width / 2, y: worldSize.height / 2 }
 
 
 exports.init = function (app)
@@ -35,8 +36,8 @@ exports.onNewConnection = function (socket)
 exports.onNewPlayer = function (data, cb)
 {
   player = new types.t_Player(nextId);
-  player.x = 100;
-  player.y = 10;
+  player.x = worldCenter.x * mpp - player.width / 2;
+  player.y = worldCenter.y * mpp - player.height / 2;
   player.color = get_random_color();
   player.name = data.name;
   player.health = 100;
