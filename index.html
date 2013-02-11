@@ -65,7 +65,18 @@
       }
       else
       {
-        $("#login-btn").click(function ()
+        $("#login-btn").click(connect);
+        $("#login-nickname").keypress(function (e)
+        {
+          if (e.which == 13)
+          {
+            e.preventDefault();
+            connect();
+            return false;
+          }
+        });
+
+        function connect()
         {
           var nickname = $("#login-nickname").val();
 
@@ -86,7 +97,7 @@
             }, 650);
 
           game.start(nickname);
-        });
+        }
       }
     </script>
   </body>

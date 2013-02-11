@@ -15,7 +15,7 @@ exports.addMessage = function (msg)
   html.text(msg);
   log$.append(html);
 
-  setTimeout(function () { removeMessage(id) }, 1500);
+  setTimeout(function () { removeMessage(id) }, 5000);
 
   msgCounter++;
 }
