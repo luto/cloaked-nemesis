@@ -4,6 +4,7 @@ var util = require('/player_util.js');
 var types = require('/types.js');
 var entities = {};
 var worldSize;
+var pressedKeys = {};
 
 // collie.js
 var c_layer_players;
@@ -24,15 +25,21 @@ exports.init = function()
 
 exports.start = function(nickname)
 {
+  // socket.io
   comm.sendHello(nickname);
 
+  // input
   document.addEventListener('keydown', handleKeyDown);
+  document.addEventListener('keyup', handleKeyUp);
+
+  // collie.js
+  collie.Renderer.setRenderingMode('dom');
   c_layer_players = new collie.Layer({ width: worldSize.width,
                                        height: worldSize.height });
   
   collie.Renderer.addLayer(c_layer_players);
   collie.Renderer.load($("#game")[0]);
-  collie.Renderer.start("30fps");
+  collie.Renderer.start("30fps", collieTick);
 }
 
 exports.sendChatMessage = function (msg)
@@ -108,23 +115,32 @@ function setPlayerPos(player)
     });
 }
 
+function handleKeyUp(evt)
+{
+  pressedKeys[evt.keyCode] = false;
+}
+
 function handleKeyDown(evt)
 {
-  var dist = 3;
-  if(evt.keyCode == 37) // left
+  pressedKeys[evt.keyCode] = true;
+}
+
+function collieTick(frame, skippedFrame, fps, duration)
+{
+  if(pressedKeys[37]) // left
   {
-    comm.sendMove(dist * -1, 0);
+    comm.sendMove('left');
   }
-  else if(evt.keyCode == 38) // up
+  else if(pressedKeys[38]) // up
   {
-    comm.sendMove(0, dist * -1);
+    comm.sendMove('up');
   }
-  else if(evt.keyCode == 39) // right
+  else if(pressedKeys[39]) // right
   {
-    comm.sendMove(dist, 0);
+    comm.sendMove('right');
   }
-  else if(evt.keyCode == 40) // down
+  else if(pressedKeys[40]) // down
   {
-    comm.sendMove(0, dist);
+    comm.sendMove('down');
   }
 }

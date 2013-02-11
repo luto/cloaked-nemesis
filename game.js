@@ -101,7 +101,24 @@ exports.onPacket = function (id, type, data)
   if(type == "MOVE")
   {
     var player = entities[id];
-    bodies[id].SetLinearVelocity(new Box2D.Common.Math.b2Vec2(data.x, data.y));
+    var vec = new Box2D.Common.Math.b2Vec2(0, 0);
+    var len = 3;
+    switch(data.direction)
+    {
+      case "up":
+        vec.y = len * -1;
+        break;
+      case "down":
+        vec.y = len;
+        break;
+      case "left":
+        vec.x = len * -1;
+        break;
+      case "right":
+        vec.x = len;
+        break;
+    }
+    bodies[id].SetLinearVelocity(vec);
   }
   else if(type == "CHAT")
   {

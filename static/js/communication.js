@@ -25,9 +25,9 @@ exports.listen = function (evt, func)
    eventListeners[evt].push(func);
 }
 
-exports.sendMove = function (x, y)
+exports.sendMove = function (direction)
 {
-  socket.emit('PAK', { type: 'MOVE', data: { x: x, y: y }});
+  socket.emit('PAK', { type: 'MOVE', data: { direction: direction }});
 }
 
 exports.sendHello = function (nickname)
