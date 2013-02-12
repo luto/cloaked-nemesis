@@ -170,7 +170,7 @@ function checkPlayers()
          pos.y < battleFieldSize.y)
       {
         setPosition(id, worldSize.width * mpp - 50, 5);
-        bodies[id].SetLinearVelocity(new Box2D.Common.Math.b2Vec2(-2 / entities.length, 0));
+        bodies[id].SetLinearVelocity(new Box2D.Common.Math.b2Vec2(-2, 0));
         entities[id].alive = false;
         comm.broadcast('DIE_ENTITY', { id: id });
       }
