@@ -89,7 +89,7 @@ function handleAddEntity(entity)
   {
     createPlayer(entity);
     gameConsole.playerJoined(entity.name);
-    playerList.addPlayer(entity.name, entity.color);
+    playerList.addPlayer(entity.name, entity.color, entity.score);
   }
 }
 
@@ -128,7 +128,7 @@ function handleRemoveEntity(data)
   if(entity instanceof types.t_Player)
   {
     gameConsole.playerLeft(entity.name);
-    playerList.removePlayer(entity.name, entity.color);
+    playerList.removePlayer(entity.name);
 
     for(var sub in c_players[data.id])
       c_layer_players.removeChild(c_players[data.id][sub]);
@@ -147,6 +147,8 @@ function handleDieEntity(data)
     entity.alive = false;
     gameConsole.playerDied(entity.name);
     playerList.killPlayer(entity.name);
+    entity.score--;
+    playerList.setScoreOfPlayer(entity.name, entity.score);
   }
 }
 

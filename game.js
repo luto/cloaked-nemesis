@@ -184,6 +184,7 @@ function checkPlayers()
                         worldCenter.x * mpp - entities[id].width / 2);
         bodies[id].SetLinearVelocity(new Box2D.Common.Math.b2Vec2(0, 0));
         entities[id].alive = true;
+        entities[id].score--;
         comm.broadcast('RESPAWN_ENTITY', { id: id });
       }
     }

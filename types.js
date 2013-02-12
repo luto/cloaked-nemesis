@@ -17,6 +17,7 @@ exports.t_Player = exports.t_Entity.extend({
   color: null,
    name: null,
   alive: true,
+  score: 0,
    init: function (id)
      {
        this._super(id);
@@ -25,6 +26,7 @@ exports.t_Player = exports.t_Entity.extend({
        this.width = 50;
        this.color = "#000";
        this.alive = true;
+       this.score = 0;
      }
 });
 
