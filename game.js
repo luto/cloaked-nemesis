@@ -169,10 +169,22 @@ function checkPlayers()
          pos.y + 25 / mpp > battleFieldSize.y + battleFieldSize.height ||
          pos.y < battleFieldSize.y)
       {
-        setPosition(id, 0, 0);
-        bodies[id].SetLinearVelocity(new Box2D.Common.Math.b2Vec2(0, 0));
+        setPosition(id, worldSize.width * mpp - 50, 5);
+        bodies[id].SetLinearVelocity(new Box2D.Common.Math.b2Vec2(-2 / entities.length, 0));
         entities[id].alive = false;
         comm.broadcast('DIE_ENTITY', { id: id });
+      }
+    }
+    else if(entities[id] instanceof types.t_Player && !entities[id].alive)
+    {
+      var pos = bodies[id].GetPosition();
+      if(pos.x <= 0)
+      {
+        setPosition(id, worldCenter.x * mpp - entities[id].width / 2,
+                        worldCenter.x * mpp - entities[id].width / 2);
+        bodies[id].SetLinearVelocity(new Box2D.Common.Math.b2Vec2(0, 0));
+        entities[id].alive = true;
+        comm.broadcast('RESPAWN_ENTITY', { id: id });
       }
     }
   }

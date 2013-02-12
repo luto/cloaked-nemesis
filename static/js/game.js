@@ -22,6 +22,7 @@ exports.init = function()
   comm.listen('ADD_ENTITY', handleAddEntity);
   comm.listen('REMOVE_ENTITY', handleRemoveEntity);
   comm.listen('DIE_ENTITY', handleDieEntity);
+  comm.listen('RESPAWN_ENTITY', handleRespawnEntity);
   comm.listen('PHYSICS', handlePhysicsUpdate);
   comm.listen('CHAT', handleChat);
   comm.listen('HELLO', handleHello);
@@ -146,6 +147,17 @@ function handleDieEntity(data)
     entity.alive = false;
     gameConsole.playerDied(entity.name);
     playerList.killPlayer(entity.name);
+  }
+}
+
+function handleRespawnEntity(data)
+{
+  var entity = entities[data.id];
+
+  if(entity instanceof types.t_Player)
+  {
+    entity.alive = true;
+    playerList.spawnPlayer(entity.name);
   }
 }
 

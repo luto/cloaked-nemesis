@@ -7,6 +7,7 @@ exports.init = function ()
   eventListeners["ADD_ENTITY"] = [];
   eventListeners["REMOVE_ENTITY"] = [];
   eventListeners["DIE_ENTITY"] = [];
+  eventListeners["RESPAWN_ENTITY"] = [];
   eventListeners["PHYSICS"] = [];
   eventListeners["CHAT"] = [];
 }
