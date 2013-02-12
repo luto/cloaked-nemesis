@@ -46,6 +46,9 @@ exports.start = function(nickname)
   battleField = new collie.DisplayObject({ backgroundColor : '#FFA6C9' });
   handleBattlefieldChange(battleFieldSize);
   battleField.addTo(c_layer_players);
+
+  // messages
+  gameConsole.setPos(worldSize.width + 30, 20);
 }
 
 exports.sendChatMessage = function (msg)

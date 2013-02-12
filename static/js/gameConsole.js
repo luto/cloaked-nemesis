@@ -41,6 +41,12 @@ exports.chatMessage = function (nickname, message)
   exports.addMessage(nickname + ': ' + message);
 }
 
+exports.setPos = function (left, top)
+{
+  $('#messages').css('top', top);
+  $('#messages').css('left', left);
+}
+
 function removeMessage(msg$)
 {
   msg$.fadeOut(1500, function() { msg$.remove(); });
