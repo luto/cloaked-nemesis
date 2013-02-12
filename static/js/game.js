@@ -84,17 +84,30 @@ function handlePlayerJoined(entity)
 
 function createPlayer(player)
 {
-  var c_player = new collie.MovableObject(
+  var square = new collie.MovableObject(
     {
-      width : player.width,
-      height : player.height,
+      width: player.width,
+      height: player.height,
       mass: 1,
       backgroundColor: player.color,
     });
   
-  c_players[player.id] = c_player;
+  var name = new collie.Text(
+    {
+      width: player.width,
+      height: 13,
+      fontSize: 13,
+      fontColor: "#FFF",
+      textAlign: "center"
+    });
+
+  name.text(player.name);
+
+  c_players[player.id] = { square: square, name: name };
+
   setPlayerPos(player);
-  c_player.addTo(c_layer_players);
+  for(var sub in c_players[player.id])
+    c_players[player.id][sub].addTo(c_layer_players);
 }
 
 function handlePlayerLeft(data)
@@ -126,10 +139,15 @@ function handleChat(data)
 
 function setPlayerPos(player)
 {
-  c_players[player.id].set(
+  c_players[player.id]["square"].set(
     {
       x : player.x,
       y : player.y,
+    });
+  c_players[player.id]["name"].set(
+    {
+      x : player.x,
+      y : player.y + 32,
     });
 }
 
