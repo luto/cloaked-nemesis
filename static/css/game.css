@@ -1,6 +1,24 @@
 #game
 {
     display: none;
+    position: fixed;
+    left: 50%;
+}
+
+#playerlist
+{
+	font-family: "Lucida Console", Monaco, monospace;
+	font-size: 10px;
+	position: absolute;
+	z-index: 1;
+}
+
+.playerlist_color
+{
+	height: 12px;
+	width: 12px;
+	float: left;
+	margin-right: 3px;
 }
 
 #messages

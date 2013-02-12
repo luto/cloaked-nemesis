@@ -1,5 +1,6 @@
 var comm = require('communication.js');
 var gameConsole = require('gameConsole.js');
+var playerList = require('playerList.js');
 var util = require('/player_util.js');
 var types = require('/types.js');
 var entities = {};
@@ -16,6 +17,7 @@ exports.init = function()
 {
   comm.init();
   gameConsole.init();
+  playerList.init();
 
   comm.listen('PLAYER_JOINED', handlePlayerJoined);
   comm.listen('PLAYER_LEFT', handlePlayerLeft);
@@ -35,6 +37,7 @@ exports.start = function(nickname)
   document.addEventListener('keyup', handleKeyUp);
 
   // collie.js
+  $("#game").css("margin-left", worldSize.width / -2);
   collie.Renderer.setRenderingMode('dom');
   c_layer_players = new collie.Layer({ width: worldSize.width,
                                        height: worldSize.height });
@@ -47,8 +50,10 @@ exports.start = function(nickname)
   handleBattlefieldChange(battleFieldSize);
   battleField.addTo(c_layer_players);
 
-  // messages
-  gameConsole.setPos(worldSize.width + 30, 20);
+  // panels
+  var gamePos = $("#game").position();
+  gameConsole.setPos(battleFieldSize.width + battleFieldSize.x + 10, battleFieldSize.y);
+  playerList.setPos(-50, battleFieldSize.y);
 }
 
 exports.sendChatMessage = function (msg)
@@ -82,6 +87,7 @@ function handlePlayerJoined(entity)
   {
     createPlayer(entity);
     gameConsole.playerJoined(entity.name);
+    playerList.addPlayer(entity.name, entity.color);
   }
 }
 
@@ -115,10 +121,16 @@ function createPlayer(player)
 
 function handlePlayerLeft(data)
 {
-  if(entities[data.id] instanceof types.t_Player)
-    gameConsole.playerLeft(entities[data.id].name);
+  var entity = entities[data.id];
 
-  c_layer_players.removeChild(c_players[data.id]);
+  if(entity instanceof types.t_Player)
+  {
+    gameConsole.playerLeft(entity.name);
+    playerList.removePlayer(entity.name, entity.color);
+  }
+
+  for(var sub in c_players[data.id])
+    c_layer_players.removeChild(c_players[data.id][sub]);
   delete c_players[data.id];
   delete entities[data.id];
 }
