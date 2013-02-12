@@ -4,11 +4,13 @@ var util = require('/player_util.js');
 var types = require('/types.js');
 var entities = {};
 var worldSize;
+var battleFieldSize;
 var pressedKeys = {};
 
 // collie.js
 var c_layer_players;
 var c_players = {};
+var battlefield;
 
 exports.init = function()
 {
@@ -40,6 +42,10 @@ exports.start = function(nickname)
   collie.Renderer.addLayer(c_layer_players);
   collie.Renderer.load($("#game")[0]);
   collie.Renderer.start("30fps", collieTick);
+
+  battleField = new collie.DisplayObject({ backgroundColor : '#FFA6C9' });
+  handleBattlefieldChange(battleFieldSize);
+  battleField.addTo(c_layer_players);
 }
 
 exports.sendChatMessage = function (msg)
@@ -47,9 +53,21 @@ exports.sendChatMessage = function (msg)
   comm.sendChatMessage(msg);
 }
 
+function handleBattlefieldChange(battleFieldSize)
+{
+  battleField.set(
+    {
+      width : battleFieldSize.width,
+      height : battleFieldSize.height,
+      x : battleFieldSize.x,
+      y : battleFieldSize.y
+    });
+}
+
 function handleHello(data)
 {
   worldSize = data.worldSize;
+  battleFieldSize = data.battleFieldSize;
 }
 
 function handlePlayerJoined(entity)

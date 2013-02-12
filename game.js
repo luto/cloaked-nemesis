@@ -17,7 +17,10 @@ var bodies = {};
 var mpp = 64;
 var worldSize = { width: 500 / mpp, height: 500 / mpp }
 var worldCenter = { x: worldSize.width / 2, y: worldSize.height / 2 }
-
+var battleFieldSize = { x: worldCenter.x - worldSize.width / 3,
+                        y: worldCenter.y - worldSize.height / 3,
+                        width: worldSize.width / 1.5,
+                        height: worldSize.height / 1.5 }
 
 exports.init = function (app)
 {
@@ -30,7 +33,9 @@ exports.init = function (app)
 
 exports.onNewConnection = function (socket)
 {
-  socket.emit('HELLO', { worldSize: { width: worldSize.width * mpp, height: worldSize.height * mpp } });
+  socket.emit('HELLO', { worldSize:   { width: worldSize.width * mpp, height: worldSize.height * mpp },
+                         battleFieldSize: { x: battleFieldSize.x * mpp, y: battleFieldSize.y * mpp,
+                                        width: battleFieldSize.width * mpp, height: battleFieldSize.height * mpp } });
 }
 
 exports.onNewPlayer = function (data, cb)
@@ -128,6 +133,7 @@ exports.onPacket = function (id, type, data)
 
 function worldStep()
 {
+  checkPlayers();
   world.Step(timeStep, 15, 15);
   
   var _bodies = {};
@@ -147,6 +153,35 @@ function worldStep()
   }
   
   comm.broadcast('PHYSICS', { bodies : _bodies });
+}
+
+function checkPlayers()
+{
+  for(var id in bodies)
+  {
+    if(entities[id] instanceof types.t_Player)
+    {
+      var pos = bodies[id].GetPosition();
+      if(pos.x + 25 / mpp > battleFieldSize.x + battleFieldSize.width ||
+         pos.x < battleFieldSize.x ||
+         pos.y + 25 / mpp > battleFieldSize.y + battleFieldSize.height ||
+         pos.y < battleFieldSize.y)
+      {
+        // move to spawnpoint
+        //var x = worldCenter.x * mpp - entities[id].width / 2;
+        //var y = worldCenter.y * mpp - entities[id].height / 2;
+        setPosition(id, 0, 0);
+        bodies[id].SetLinearVelocity(new Box2D.Common.Math.b2Vec2(0, 0));
+      }
+    }
+  }
+}
+
+function setPosition(id, x, y)
+{
+  bodies[id].SetPosition(new Box2D.Common.Math.b2Vec2(x / mpp, y / mpp));
+  entities[id].x = x;
+  entities[id].y = y;
 }
 
 function get_random_color()
