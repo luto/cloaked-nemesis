@@ -4,8 +4,9 @@ var eventListeners = [];
 exports.init = function ()
 {
   eventListeners["HELLO"] = [];
-  eventListeners["PLAYER_JOINED"] = [];
-  eventListeners["PLAYER_LEFT"] = [];
+  eventListeners["ADD_ENTITY"] = [];
+  eventListeners["REMOVE_ENTITY"] = [];
+  eventListeners["DIE_ENTITY"] = [];
   eventListeners["PHYSICS"] = [];
   eventListeners["CHAT"] = [];
 }

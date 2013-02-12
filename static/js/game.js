@@ -19,8 +19,9 @@ exports.init = function()
   gameConsole.init();
   playerList.init();
 
-  comm.listen('PLAYER_JOINED', handlePlayerJoined);
-  comm.listen('PLAYER_LEFT', handlePlayerLeft);
+  comm.listen('ADD_ENTITY', handleAddEntity);
+  comm.listen('REMOVE_ENTITY', handleRemoveEntity);
+  comm.listen('DIE_ENTITY', handleDieEntity);
   comm.listen('PHYSICS', handlePhysicsUpdate);
   comm.listen('CHAT', handleChat);
   comm.listen('HELLO', handleHello);
@@ -78,7 +79,7 @@ function handleHello(data)
   battleFieldSize = data.battleFieldSize;
 }
 
-function handlePlayerJoined(entity)
+function handleAddEntity(entity)
 {
   entity = types.getObj(entity.__type, entity);
   entities[entity.id] = entity;
@@ -119,7 +120,7 @@ function createPlayer(player)
     c_players[player.id][sub].addTo(c_layer_players);
 }
 
-function handlePlayerLeft(data)
+function handleRemoveEntity(data)
 {
   var entity = entities[data.id];
 
@@ -127,12 +128,25 @@ function handlePlayerLeft(data)
   {
     gameConsole.playerLeft(entity.name);
     playerList.removePlayer(entity.name, entity.color);
+
+    for(var sub in c_players[data.id])
+      c_layer_players.removeChild(c_players[data.id][sub]);
+    delete c_players[data.id];
   }
 
-  for(var sub in c_players[data.id])
-    c_layer_players.removeChild(c_players[data.id][sub]);
-  delete c_players[data.id];
   delete entities[data.id];
+}
+
+function handleDieEntity(data)
+{
+  var entity = entities[data.id];
+
+  if(entity instanceof types.t_Player)
+  {
+    entity.alive = false;
+    gameConsole.playerDied(entity.name);
+    playerList.killPlayer(entity.name);
+  }
 }
 
 function handlePhysicsUpdate(data)

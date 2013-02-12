@@ -16,6 +16,7 @@ exports.t_Entity = Class.extend({
 exports.t_Player = exports.t_Entity.extend({
   color: null,
    name: null,
+  alive: true,
    init: function (id)
      {
        this._super(id);
@@ -23,6 +24,7 @@ exports.t_Player = exports.t_Entity.extend({
        this.height = 50;
        this.width = 50;
        this.color = "#000";
+       this.alive = true;
      }
 });
 

@@ -51,7 +51,6 @@ exports.onNewPlayer = function (data, cb)
   player.y = worldCenter.y * mpp - player.height / 2;
   player.color = get_random_color();
   player.name = data.name;
-  player.health = 100;
   
   nextId++;
   
@@ -63,7 +62,7 @@ exports.onNewPlayer = function (data, cb)
   // show the new client all the old clients
   for(var id in entities)
   {
-    comm.emit(player.id, 'PLAYER_JOINED', entities[id]);
+    comm.emit(player.id, 'ADD_ENTITY', entities[id]);
   }
   
   // save the generated player-object
@@ -87,9 +86,8 @@ exports.onNewPlayer = function (data, cb)
 
   bodies[player.id] = body;
   
-  
   // show the old clients the new client
-  comm.broadcast('PLAYER_JOINED', player);
+  comm.broadcast('ADD_ENTITY', player);
 }
 
 exports.onPlayerLeft = function (id)
@@ -98,7 +96,7 @@ exports.onPlayerLeft = function (id)
   delete entities[id];
   world.DestroyBody(bodies[id]);
   delete bodies[id];
-  comm.broadcast('PLAYER_LEFT', { id: id });
+  comm.broadcast('REMOVE_ENTITY', { id: id });
 }
 
 exports.onPacket = function (id, type, data)
@@ -106,6 +104,10 @@ exports.onPacket = function (id, type, data)
   if(type == "MOVE")
   {
     var player = entities[id];
+    
+    if(!player.alive)
+      return;
+
     var vec = new Box2D.Common.Math.b2Vec2(0, 0);
     var len = 3;
     switch(data.direction)
@@ -159,7 +161,7 @@ function checkPlayers()
 {
   for(var id in bodies)
   {
-    if(entities[id] instanceof types.t_Player)
+    if(entities[id] instanceof types.t_Player && entities[id].alive)
     {
       var pos = bodies[id].GetPosition();
       if(pos.x + 25 / mpp > battleFieldSize.x + battleFieldSize.width ||
@@ -167,11 +169,10 @@ function checkPlayers()
          pos.y + 25 / mpp > battleFieldSize.y + battleFieldSize.height ||
          pos.y < battleFieldSize.y)
       {
-        // move to spawnpoint
-        //var x = worldCenter.x * mpp - entities[id].width / 2;
-        //var y = worldCenter.y * mpp - entities[id].height / 2;
         setPosition(id, 0, 0);
         bodies[id].SetLinearVelocity(new Box2D.Common.Math.b2Vec2(0, 0));
+        entities[id].alive = false;
+        comm.broadcast('DIE_ENTITY', { id: id });
       }
     }
   }
