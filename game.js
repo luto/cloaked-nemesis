@@ -40,7 +40,7 @@ exports.onNewConnection = function (socket)
 
 exports.onNewPlayer = function (data, cb)
 {
-  if(!data.name.match(/^[a-zA-ZüäöÜÄÖß]+$/))
+  if(!data.name.match(/^[a-zA-ZüäöÜÄÖß]+$/) || data.name.length > 10)
   {
     cb(-1);
     return;

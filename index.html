@@ -84,7 +84,7 @@
       {
         var nickname = $("#login-nickname").val();
 
-        if(!nickname.match(/^[a-zA-ZüäöÜÄÖß]+$/))
+        if(!nickname.match(/^[a-zA-ZüäöÜÄÖß]+$/) || nickname > 10)
         {
           $("#login").css('background-color', '#F44');
           return;
