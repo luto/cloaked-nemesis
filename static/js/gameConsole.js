@@ -38,7 +38,7 @@ exports.playerLeft = function (nickname)
 
 exports.playerDied = function (nickname)
 {
-  exports.addMessage('Player died: ' + nickname);
+  //exports.addMessage('Player died: ' + nickname);
 }
 
 exports.chatMessage = function (nickname, message)
