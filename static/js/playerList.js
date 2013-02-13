@@ -22,6 +22,7 @@ exports.addPlayer = function (name, color, score)
                '</div>');
 
   players$.append(html);
+  updatePlayerNum();
 
   $('#' + id + ' .playerlist_name').text(name);
   $('#' + id + ' .playerlist_color').css('background-color', color);
@@ -31,6 +32,7 @@ exports.addPlayer = function (name, color, score)
 exports.removePlayer = function (name)
 {
   $('#playerlist_entry_' + name).remove();
+  updatePlayerNum();
 }
 
 exports.killPlayer = function (name)
@@ -46,4 +48,9 @@ exports.spawnPlayer = function (name)
 exports.setScoreOfPlayer = function (name, score)
 {
   $('#playerlist_entry_' + name + ' .playerlist_score').text(score);
+}
+
+function updatePlayerNum()
+{
+  $('#player_number').text($('.playerlist_entry').length);
 }
