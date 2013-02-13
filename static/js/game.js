@@ -58,9 +58,9 @@ exports.start = function(nickname)
   playerList.setPos(-50, battleFieldSize.y);
 }
 
-exports.sendChatMessage = function (msg)
+exports.sendChatMessage = function (message)
 {
-  comm.sendChatMessage(msg);
+  comm.sendChatMessage(message);
 }
 
 function handleBattlefieldChange(battleFieldSize)
@@ -80,9 +80,9 @@ function handleHello(data)
   battleFieldSize = data.battleFieldSize;
 }
 
-function handleAddEntity(entity)
+function handleAddEntity(data)
 {
-  entity = types.getObj(entity.__type, entity);
+  var entity = types.getObj(data.entity.__type, data.entity);
   entities[entity.id] = entity;
   
   if(entity instanceof types.t_Player)
@@ -177,7 +177,7 @@ function handlePhysicsUpdate(data)
 function handleChat(data)
 {
   var name = entities[data.sender].name;
-  gameConsole.chatMessage(name, data.msg);
+  gameConsole.chatMessage(name, data.message);
 }
 
 function setPlayerPos(player)

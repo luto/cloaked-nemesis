@@ -64,5 +64,40 @@ function newConnection(socket)
 
 function onPacket(id, pak)
 {
-  game.onPacket(id, pak.type, pak.data)
+  if(!pak.data)
+    return;
+
+  switch(pak.type)
+  {
+    case "MOVE":
+      if(!pak.data.direction)
+        return;
+      game.onMove(id, pak.data.direction);
+      break;
+    case "CHAT":
+      if(!pak.data.message)
+        return;
+      game.onChat(id, pak.data.message);
+      break;
+  }
+}
+
+exports.onPhysics = function (bodies)
+{
+  exports.broadcast('PHYSICS', { bodies: bodies });
+}
+
+exports.onChat = function (sender, message)
+{
+  exports.broadcast('CHAT', { message: message, sender: sender });
+}
+
+exports.onAddEntity = function (entity)
+{
+  exports.broadcast('ADD_ENTITY', { entity: entity });
+}
+
+exports.onRemoveEntity = function (id)
+{
+  exports.broadcast('REMOVE_ENTITY', { id: id });
 }

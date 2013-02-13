@@ -62,7 +62,7 @@ exports.onNewPlayer = function (data, cb)
   // show the new client all the old clients
   for(var id in entities)
   {
-    comm.emit(player.id, 'ADD_ENTITY', entities[id]);
+    comm.emit(player.id, 'ADD_ENTITY', { entity: entities[id] });
   }
   
   // save the generated player-object
@@ -87,7 +87,7 @@ exports.onNewPlayer = function (data, cb)
   bodies[player.id] = body;
   
   // show the old clients the new client
-  comm.broadcast('ADD_ENTITY', player);
+  comm.onAddEntity(player);
 }
 
 exports.onPlayerLeft = function (id)
@@ -96,41 +96,39 @@ exports.onPlayerLeft = function (id)
   delete entities[id];
   world.DestroyBody(bodies[id]);
   delete bodies[id];
-  comm.broadcast('REMOVE_ENTITY', { id: id });
+  comm.onRemoveEntity(id);
 }
 
-exports.onPacket = function (id, type, data)
+exports.onMove = function (id, direction)
 {
-  if(type == "MOVE")
-  {
-    var player = entities[id];
-    
-    if(!player.alive)
-      return;
+  var player = entities[id];
+  
+  if(!player.alive)
+    return;
 
-    var vec = new Box2D.Common.Math.b2Vec2(0, 0);
-    var len = 3;
-    switch(data.direction)
-    {
-      case "up":
-        vec.y = len * -1;
-        break;
-      case "down":
-        vec.y = len;
-        break;
-      case "left":
-        vec.x = len * -1;
-        break;
-      case "right":
-        vec.x = len;
-        break;
-    }
-    bodies[id].SetLinearVelocity(vec);
-  }
-  else if(type == "CHAT")
+  var vec = new Box2D.Common.Math.b2Vec2(0, 0);
+  var len = 3;
+  switch(direction)
   {
-    comm.broadcast('CHAT', { msg: data.msg, sender: id });
+    case "up":
+      vec.y = len * -1;
+      break;
+    case "down":
+      vec.y = len;
+      break;
+    case "left":
+      vec.x = len * -1;
+      break;
+    case "right":
+      vec.x = len;
+      break;
   }
+  bodies[id].SetLinearVelocity(vec);
+}
+
+exports.onChat = function (id, message)
+{
+  comm.onChat(id, message);
 }
 
 function worldStep()
@@ -154,7 +152,7 @@ function worldStep()
     entities[b].y = _bodies[b].y;
   }
   
-  comm.broadcast('PHYSICS', { bodies : _bodies });
+  comm.onPhysics(_bodies);
 }
 
 function checkPlayers()

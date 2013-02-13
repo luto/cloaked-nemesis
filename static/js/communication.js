@@ -37,9 +37,9 @@ exports.sendHello = function (nickname)
   socket.emit('HELLO', { name: nickname });
 }
 
-exports.sendChatMessage = function (msg)
+exports.sendChatMessage = function (message)
 {
-  socket.emit('PAK', { type: 'CHAT', data: { msg: msg }});
+  socket.emit('PAK', { type: 'CHAT', data: { message: message }});
 }
 
 function onHello(pak)
