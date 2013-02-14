@@ -8,7 +8,6 @@
     <script src="/static/js/jquery.minicolors.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/static/js/collie.min.js"></script>
-    <link href='http://fonts.googleapis.com/css?family=Vollkorn' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="/static/css/main.css">
     <link rel="stylesheet" href="/static/css/game.css">
     <link rel="stylesheet" href="/static/css/jquery.minicolors.css">
@@ -28,12 +27,26 @@
         <div id="players"></div>
       </div>
     </div>
+    
+    <h1 id="login-game-title">Cloaked-Nemesis</h1>
     <div id="login">
-      <h1 id="login-game-title">Cloaked-Nemesis</h1>
       <label for="login-nickname">Nickname:</label>
       <input type="text" name="login-nickname" id="login-nickname"/>
       <input id="login-color" type="text">
       <button type="button" id="login-btn">Start!</button>
+    </div>
+    <a href="#" id="about-link">About</a>
+    <div id="about-text">
+      This is a small game made by <a href="http://luto.at/">luto</a>, it also uses the following technologies:<br>
+      <a href="http://nodejs.org/">node.js</a> (server)<br>
+      <a href="https://code.google.com/p/box2dweb/">Box2dweb</a> (physics)<br>
+      <a href="http://socket.io/">socket.io</a> (communication)<br>
+      <a href="https://github.com/cloudhead/node-static">node-static</a> (http server for static files)<br>
+      <a href="http://jquery.com/">jQuery</a> +
+      <a href="http://plugins.jquery.com/queryParser/">queryParser</a> +
+      <a href="http://labs.abeautifulsite.net/jquery-miniColors/">miniColors</a><br>
+      <a href="http://jindo.dev.naver.com/collie/">Collie</a> (client graphics)<br>
+      <a href="http://stackoverflow.com/a/1484514">get_random_color()</a><br>
     </div>
 
     <script>
@@ -42,6 +55,11 @@
         $('#login').width($('#login').width() + 25);
         $('#login-btn').css('margin-right', 2);
       }
+
+      $('#about-link').click(function ()
+      {
+        $('#about-text').slideToggle(400);
+      })
 
       $('#login-color').val(getRandomColor());
       $('#login-color').minicolors({ textfield: false });
@@ -122,7 +140,8 @@
         $('#login-game-title').fadeOut(1000);
         setTimeout(function()
           {
-            $('#login').fadeOut(500, function ()
+            $('#about-text').fadeOut(500);
+            $('#login, #about-link').fadeOut(500, function ()
               {
                 $('#game').fadeIn(300);
               });
@@ -131,10 +150,10 @@
 
       function getRandomColor()
       {
-          var letters = '0123456789ABCDEF'.split('');
+          var letters = '123456789ABCDEF'.split('');
           var color = '#';
           for (var i = 0; i < 6; i++ ) {
-              color += letters[Math.round(Math.random() * 15)];
+              color += letters[Math.round(Math.random() * 14)];
           }
           return color;
       }
