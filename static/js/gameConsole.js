@@ -26,17 +26,17 @@ exports.addMessage = function (msg)
   msgCounter++;
 }
 
-exports.playerJoined = function (nickname)
+exports.addPlayer = function (nickname)
 {
   exports.addMessage('Player joined: ' + nickname);
 }
 
-exports.playerLeft = function (nickname)
+exports.removePlayer = function (nickname)
 {
   exports.addMessage('Player left: ' + nickname);
 }
 
-exports.playerDied = function (nickname)
+exports.killPlayer = function (nickname)
 {
   //exports.addMessage('Player died: ' + nickname);
 }

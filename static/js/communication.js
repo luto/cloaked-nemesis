@@ -1,15 +1,9 @@
 var socket;
-var eventListeners = [];
+var game;
 
-exports.init = function ()
+exports.init = function (_game)
 {
-  eventListeners["HELLO"] = [];
-  eventListeners["ADD_ENTITY"] = [];
-  eventListeners["REMOVE_ENTITY"] = [];
-  eventListeners["DIE_ENTITY"] = [];
-  eventListeners["RESPAWN_ENTITY"] = [];
-  eventListeners["PHYSICS"] = [];
-  eventListeners["CHAT"] = [];
+  game = _game;
 }
 
 exports.connect = function ()
@@ -44,18 +38,39 @@ exports.sendChatMessage = function (message)
 
 function onHello(pak)
 {
-  triggerEvent('HELLO', pak);
+  switch(pak.step)
+  {
+    case 0:
+      game.onStepZeroHello(pak.worldSize, pak.battleFieldSize);
+      break;
+    case 1:
+      game.onStepOneHello(pak.error);
+      break;
+  }
 }
 
 function onPacket(pak)
 {
-  triggerEvent(pak.type, pak.data);
-}
-
-function triggerEvent(evt, arg)
-{
-  for(var func in eventListeners[evt])
+  switch(pak.type)
   {
-    eventListeners[evt][func](arg);
+    case "ADD_ENTITY":
+      game.handleAddEntity(pak.data.entity);
+      break;
+    case "REMOVE_ENTITY":
+      game.handleRemoveEntity(pak.data.id);
+      break;
+    case "DIE_ENTITY":
+      game.handleDieEntity(pak.data.id);
+      break;
+    case "RESPAWN_ENTITY":
+      game.handleRespawnEntity(pak.data.id);
+      break;
+    case "PHYSICS":
+      game.handlePhysicsUpdate(pak.data.bodies);
+      break;
+    case "CHAT":
+      game.handleChat(pak.data.sender, pad.data.message);
+      break;
   }
 }
+
