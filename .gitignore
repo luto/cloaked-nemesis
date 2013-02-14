@@ -5,4 +5,7 @@ node_modules
 static/js/collie.min.js
 static/js/jquery-1.9.0.min.js
 static/js/jquery-queryParser.min.js
+static/css/jquery.minicolors.css
+static/img/jquery.minicolors.png
+static/js/jquery.minicolors.js
 Box2dWeb-2.1.a.3.js

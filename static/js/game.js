@@ -30,10 +30,10 @@ exports.init = function()
   comm.connect();
 };
 
-exports.start = function(nickname, cb)
+exports.start = function(nickname, color, cb)
 {
   startCallback = cb;
-  comm.sendHello(nickname);
+  comm.sendHello(nickname, color);
 }
 
 exports.sendChatMessage = function (message)

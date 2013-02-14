@@ -35,6 +35,11 @@ function newConnection(socket)
   
   socket.on('HELLO', function (data)
     {
+      if(!data.name)
+        return;
+      if(!data.color)
+        return;
+      
       game.onNewPlayer(data, function (newId, error)
         {
           if(error)

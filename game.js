@@ -47,6 +47,12 @@ exports.onNewPlayer = function (data, cb)
     return;
   }
 
+  if(!data.color.match(/^#[a-zA-Z0-9]{6}$/))
+  {
+    cb(null, "color-invalid");
+    return;
+  }
+
   for(var id in entities)
   {
     if(entities[id] instanceof types.t_Player)
@@ -62,7 +68,7 @@ exports.onNewPlayer = function (data, cb)
   player = new types.t_Player(nextId);
   player.x = worldCenter.x * mpp - player.width / 2;
   player.y = worldCenter.y * mpp - player.height / 2;
-  player.color = get_random_color();
+  player.color = data.color;
   player.name = data.name;
   
   nextId++;
@@ -207,14 +213,4 @@ function setPosition(id, x, y)
   bodies[id].SetPosition(new Box2D.Common.Math.b2Vec2(x / mpp, y / mpp));
   entities[id].x = x;
   entities[id].y = y;
-}
-
-function get_random_color()
-{
-    var letters = '0123456789ABCDEF'.split('');
-    var color = '#';
-    for (var i = 0; i < 6; i++ ) {
-        color += letters[Math.round(Math.random() * 15)];
-    }
-    return color;
 }

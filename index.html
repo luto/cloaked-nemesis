@@ -5,11 +5,13 @@
     <script src="/static/js/require-kernel.js"></script>
     <script src="/static/js/jquery-1.9.0.min.js"></script>
     <script src="/static/js/jquery-queryParser.min.js"></script>
+    <script src="/static/js/jquery.minicolors.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/static/js/collie.min.js"></script>
     <link href='http://fonts.googleapis.com/css?family=Vollkorn' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="/static/css/main.css">
     <link rel="stylesheet" href="/static/css/game.css">
+    <link rel="stylesheet" href="/static/css/jquery.minicolors.css">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   </head>
   <body>
@@ -30,7 +32,8 @@
       <h1 id="login-game-title">Cloaked-Nemesis</h1>
       <label for="login-nickname">Nickname:</label>
       <input type="text" name="login-nickname" id="login-nickname"/>
-      <button type="button" id="login-btn">Login!</button>
+      <input id="login-color" type="text">
+      <button type="button" id="login-btn">Start!</button>
     </div>
 
     <script>
@@ -39,6 +42,9 @@
         $('#login').width($('#login').width() + 25);
         $('#login-btn').css('margin-right', 2);
       }
+
+      $('#login-color').val(getRandomColor());
+      $('#login-color').minicolors({ textfield: false });
 
       require.setLibraryURI('/static/js');
       require.setRootURI('http://' + window.location.hostname + ':' + window.location.port);
@@ -86,6 +92,7 @@
       function connect()
       {
         var nickname = $("#login-nickname").val();
+        var color = $('#login-color').val();
 
         if(!nickname.match(/^[a-zA-ZüäöÜÄÖß]+$/) || nickname > 10)
         {
@@ -94,14 +101,21 @@
         }
         $("#login").css('background-color', '');
 
-        game.start(nickname, gameStarted);
+        game.start(nickname, color, gameStarted);
       }
 
       function gameStarted(error)
       {
-        if(error)
+        if(error == "nickname-invalid" ||
+           error == "nickname-doubled")
         {
           $("#login").css('background-color', '#F44');
+          return;
+        }
+        else if(error == "color-invalid")
+        {
+          // should not happen without client manipualtions
+          alert("Your color was invalid. Please contact me.");
           return;
         }
 
@@ -113,6 +127,16 @@
                 $('#game').fadeIn(300);
               });
           }, 650);
+      }
+
+      function getRandomColor()
+      {
+          var letters = '0123456789ABCDEF'.split('');
+          var color = '#';
+          for (var i = 0; i < 6; i++ ) {
+              color += letters[Math.round(Math.random() * 15)];
+          }
+          return color;
       }
     </script>
   </body>
