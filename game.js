@@ -1,5 +1,4 @@
 var comm = require('./communication.js');
-var util = require('./player_util.js')
 var types = require('./types.js');
 require('./Box2dWeb-2.1.a.3.js');
 

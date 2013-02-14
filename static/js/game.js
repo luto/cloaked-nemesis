@@ -1,7 +1,6 @@
 var comm = require('communication.js');
 var gameConsole = require('gameConsole.js');
 var playerList = require('playerList.js');
-var util = require('/player_util.js');
 var types = require('/types.js');
 var entities = {};
 var worldSize;
