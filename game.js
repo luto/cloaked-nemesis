@@ -9,7 +9,7 @@ var entities = {};
 // box2d
 var world = null;
 var tickInterval;
-var fps = 60.0;
+var fps = 30.0;
 var timeStep = 1 / fps;
 var bodies = {};
 
@@ -151,8 +151,8 @@ exports.onChat = function (id, message)
 
 function worldStep()
 {
-  checkPlayers();
   world.Step(timeStep, 15, 15);
+  checkPlayers();
   
   var _bodies = {};
   
@@ -180,9 +180,9 @@ function checkPlayers()
     if(entities[id] instanceof types.t_Player && entities[id].alive)
     {
       var pos = bodies[id].GetPosition();
-      if(pos.x + 25 / mpp > battleFieldSize.x + battleFieldSize.width ||
+      if(pos.x + 50 / mpp > battleFieldSize.x + battleFieldSize.width ||
          pos.x < battleFieldSize.x ||
-         pos.y + 25 / mpp > battleFieldSize.y + battleFieldSize.height ||
+         pos.y + 50 / mpp > battleFieldSize.y + battleFieldSize.height ||
          pos.y < battleFieldSize.y)
       {
         setPosition(id, worldSize.width * mpp - 50, 5);
