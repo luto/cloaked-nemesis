@@ -33,7 +33,8 @@ exports.init = function (app)
 
 exports.onNewConnection = function (socket)
 {
-  socket.emit('HELLO', { worldSize:   { width: worldSize.width * mpp, height: worldSize.height * mpp },
+  socket.emit('HELLO', { step: 0,
+                         worldSize: { width: worldSize.width * mpp, height: worldSize.height * mpp },
                          battleFieldSize: { x: battleFieldSize.x * mpp, y: battleFieldSize.y * mpp,
                                         width: battleFieldSize.width * mpp, height: battleFieldSize.height * mpp } });
 }
@@ -42,8 +43,20 @@ exports.onNewPlayer = function (data, cb)
 {
   if(!data.name.match(/^[a-zA-ZüäöÜÄÖß]+$/) || data.name.length > 10)
   {
-    cb(-1);
+    cb(null, "nickname-invalid");
     return;
+  }
+
+  for(var id in entities)
+  {
+    if(entities[id] instanceof types.t_Player)
+    {
+      if(entities[id].name == data.name)
+      {
+        cb(null, "nickname-doubled");
+        return;
+      }
+    }
   }
 
   player = new types.t_Player(nextId);
@@ -57,7 +70,7 @@ exports.onNewPlayer = function (data, cb)
   console.log("Player joined: " + player.name + ", " + player.id);
   
   // tell the socket its ID
-  cb(player.id);
+  cb(player.id, null);
   
   // show the new client all the old clients
   for(var id in entities)

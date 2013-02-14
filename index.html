@@ -94,6 +94,17 @@
         }
         $("#login").css('background-color', '');
 
+        game.start(nickname, gameStarted);
+      }
+
+      function gameStarted(error)
+      {
+        if(error)
+        {
+          $("#login").css('background-color', '#F44');
+          return;
+        }
+
         $('#login-game-title').fadeOut(1000);
         setTimeout(function()
           {
@@ -102,8 +113,6 @@
                 $('#game').fadeIn(300);
               });
           }, 650);
-
-        game.start(nickname);
       }
     </script>
   </body>

@@ -7,6 +7,7 @@ var entities = {};
 var worldSize;
 var battleFieldSize;
 var pressedKeys = {};
+var startCallback;
 
 // collie.js
 var c_layer_players;
@@ -29,10 +30,48 @@ exports.init = function()
   comm.connect();
 };
 
-exports.start = function(nickname)
+exports.start = function(nickname, cb)
 {
-  // socket.io
+  startCallback = cb;
   comm.sendHello(nickname);
+}
+
+exports.sendChatMessage = function (message)
+{
+  comm.sendChatMessage(message);
+}
+
+function handleBattlefieldChange(battleFieldSize)
+{
+  battleField.set(
+    {
+      width : battleFieldSize.width,
+      height : battleFieldSize.height,
+      x : battleFieldSize.x,
+      y : battleFieldSize.y
+    });
+}
+
+function handleHello(data)
+{
+  switch(data.step)
+  {
+    case 0:
+      worldSize = data.worldSize;
+      battleFieldSize = data.battleFieldSize;
+      break;
+    case 1:
+      stepOneHelloReceived(data.error);
+      break;
+  }
+}
+
+function stepOneHelloReceived(error)
+{
+  startCallback(error);
+  
+  if(error)
+    return;
 
   // input
   document.addEventListener('keydown', handleKeyDown);
@@ -56,28 +95,7 @@ exports.start = function(nickname)
   var gamePos = $("#game").position();
   gameConsole.setPos(battleFieldSize.width + battleFieldSize.x + 10, battleFieldSize.y);
   playerList.setPos(-50, battleFieldSize.y);
-}
 
-exports.sendChatMessage = function (message)
-{
-  comm.sendChatMessage(message);
-}
-
-function handleBattlefieldChange(battleFieldSize)
-{
-  battleField.set(
-    {
-      width : battleFieldSize.width,
-      height : battleFieldSize.height,
-      x : battleFieldSize.x,
-      y : battleFieldSize.y
-    });
-}
-
-function handleHello(data)
-{
-  worldSize = data.worldSize;
-  battleFieldSize = data.battleFieldSize;
 }
 
 function handleAddEntity(data)

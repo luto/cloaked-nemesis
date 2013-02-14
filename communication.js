@@ -35,20 +35,20 @@ function newConnection(socket)
   
   socket.on('HELLO', function (data)
     {
-      game.onNewPlayer(data, function (data)
+      game.onNewPlayer(data, function (newId, error)
         {
-          if(data == -1)
+          if(error)
           {
-            socket.disconnect();
+            socket.emit('HELLO', { step: 1, error: error });
           }
           else
           {
-            id = data;
+            socket.emit('HELLO', { step: 1, error: null });
+            id = newId;
             sockets[id] = socket;
             socket.on('PAK', function (data) { onPacket(id, data); });
+            socket.removeAllListeners('HELLO');
           }
-
-          socket.removeAllListeners('HELLO');
         })
     });
   
