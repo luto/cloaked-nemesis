@@ -69,7 +69,7 @@ function onPacket(pak)
       game.handlePhysicsUpdate(pak.data.bodies);
       break;
     case "CHAT":
-      game.handleChat(pak.data.sender, pad.data.message);
+      game.handleChat(pak.data.sender, pak.data.message);
       break;
   }
 }
