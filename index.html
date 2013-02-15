@@ -6,6 +6,7 @@
     <script src="/static/js/jquery-1.9.0.min.js"></script>
     <script src="/static/js/jquery-queryParser.min.js"></script>
     <script src="/static/js/jquery.minicolors.js"></script>
+    <script src="/static/js/jquery.cookie.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/static/js/collie.min.js"></script>
     <link rel="stylesheet" href="/static/css/main.css">
@@ -44,12 +45,26 @@
       <a href="https://github.com/cloudhead/node-static">node-static</a> (http server for static files)<br>
       <a href="http://jquery.com/">jQuery</a> +
       <a href="http://plugins.jquery.com/queryParser/">queryParser</a> +
-      <a href="http://labs.abeautifulsite.net/jquery-miniColors/">miniColors</a><br>
+      <a href="http://labs.abeautifulsite.net/jquery-miniColors/">miniColors</a> +
+      <a href="https://github.com/carhartl/jquery-cookie">cookie</a><br>
       <a href="http://jindo.dev.naver.com/collie/">Collie</a> (client graphics)<br>
       <a href="http://stackoverflow.com/a/1484514">get_random_color()</a><br>
+      <a href="http://stackoverflow.com/a/2117523">guid()</a><br>
     </div>
 
     <script>
+      var uid;
+
+      if($.cookie('uid'))
+      {
+        uid = $.cookie('uid');
+      }
+      else
+      {
+        uid = guid();
+        $.cookie('uid', uid);
+      }
+
       if(navigator.userAgent.toLowerCase().indexOf('chrome') == -1)
       {
         $('#login').width($('#login').width() + 25);
@@ -119,7 +134,7 @@
         }
         $("#login").css('background-color', '');
 
-        game.start(nickname, color, gameStarted);
+        game.start(nickname, color, uid, gameStarted);
       }
 
       function gameStarted(error)
@@ -134,6 +149,11 @@
         {
           // should not happen without client manipualtions
           alert("Your color was invalid. Please contact me.");
+          return;
+        }
+        else if(error == "user-doubled")
+        {
+          alert("Use your other tab ;)");
           return;
         }
 
@@ -156,6 +176,17 @@
               color += letters[Math.round(Math.random() * 14)];
           }
           return color;
+      }
+
+      function guid()
+      {
+        var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,
+          function(c)
+          {
+            var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+            return v.toString(16);
+          });
+        return guid;
       }
     </script>
   </body>

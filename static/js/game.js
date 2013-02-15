@@ -20,10 +20,10 @@ exports.init = function()
 
 exports.types = types;
 
-exports.start = function(nickname, color, cb)
+exports.start = function(nickname, color, uid, cb)
 {
   startCallback = cb;
-  comm.sendHello(nickname, color);
+  comm.sendHello(nickname, color, uid);
 }
 
 exports.sendChatMessage = function (message)

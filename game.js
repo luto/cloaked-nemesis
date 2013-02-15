@@ -64,11 +64,24 @@ exports.onNewPlayer = function (data, cb)
     }
   }
 
+  for(var id in entities)
+  {
+    if(entities[id] instanceof types.t_Player)
+    {
+      if(entities[id].uid == data.uid)
+      {
+        cb(null, "user-doubled");
+        return;
+      }
+    }
+  }
+
   player = new types.t_Player(nextId);
   player.x = worldCenter.x * mpp - player.width / 2;
   player.y = worldCenter.y * mpp - player.height / 2;
   player.color = data.color;
   player.name = data.name;
+  player.uid = data.uid;
   
   nextId++;
   
@@ -80,7 +93,7 @@ exports.onNewPlayer = function (data, cb)
   // show the new client all the old clients
   for(var id in entities)
   {
-    comm.emit(player.id, 'ADD_ENTITY', { entity: entities[id] });
+    comm.onAddEntity(entities[id], player.id);
   }
   
   // save the generated player-object

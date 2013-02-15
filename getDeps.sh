@@ -23,6 +23,7 @@ wget "http://jindo.dev.naver.com/collie/download.php?name=collie.min" -O collie.
 wget "http://code.jquery.com/jquery-1.9.0.min.js" -O jquery-1.9.0.min.js
 wget "https://raw.github.com/mattsnider/jquery-plugin-query-parser/master/jquery-queryParser.min.js" -O jquery-queryParser.min.js
 wget "https://raw.github.com/claviska/jquery-miniColors/master/jquery.minicolors.js" -O jquery.minicolors.js
+wget "https://raw.github.com/carhartl/jquery-cookie/master/jquery.cookie.js" -O jquery.cookie.js
 cd ..
 
 mkdir img

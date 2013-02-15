@@ -26,9 +26,9 @@ exports.sendMove = function (direction)
   socket.emit('PAK', { type: 'MOVE', data: { direction: direction }});
 }
 
-exports.sendHello = function (nickname, color)
+exports.sendHello = function (nickname, color, uid)
 {
-  socket.emit('HELLO', { name: nickname, color: color });
+  socket.emit('HELLO', { name: nickname, color: color, uid: uid });
 }
 
 exports.sendChatMessage = function (message)

@@ -39,6 +39,8 @@ function newConnection(socket)
         return;
       if(!data.color)
         return;
+      if(!data.uid)
+        return;
       
       game.onNewPlayer(data, function (newId, error)
         {
@@ -97,9 +99,19 @@ exports.onChat = function (sender, message)
   exports.broadcast('CHAT', { message: message, sender: sender });
 }
 
-exports.onAddEntity = function (entity)
+exports.onAddEntity = function (entity, id)
 {
-  exports.broadcast('ADD_ENTITY', { entity: entity });
+  var copyentity = {};
+  for (var attr in entity)
+  {
+      if (entity.hasOwnProperty(attr) && attr != "uid")
+        copyentity[attr] = entity[attr];
+  }
+
+  if(id)
+    exports.emit(player.id, 'ADD_ENTITY', { entity: copyentity });
+  else
+    exports.broadcast('ADD_ENTITY', { entity: copyentity });
 }
 
 exports.onRemoveEntity = function (id)
