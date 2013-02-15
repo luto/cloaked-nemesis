@@ -9,7 +9,7 @@ var entities = {};
 // box2d
 var world = null;
 var tickInterval;
-var fps = 30.0;
+var fps = 120.0;
 var timeStep = 1 / fps;
 var bodies = {};
 
