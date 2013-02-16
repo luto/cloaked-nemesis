@@ -152,12 +152,18 @@
         else if(error == "color-invalid")
         {
           // should not happen without client manipualtions
-          alert("Your color was invalid. Please contact me.");
+          alert("Your color was invalid. This should not happen. Please contact me.");
           return;
         }
         else if(error == "user-doubled")
         {
           alert("Use your other tab ;)");
+          return;
+        }
+        else if(error == "uid-invalid")
+        {
+          // should not happen without client manipualtions
+          alert("Your uid was invalid. This should not happen. Please contact me.");
           return;
         }
 
