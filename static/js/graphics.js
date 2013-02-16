@@ -20,13 +20,14 @@ exports.start = function (worldSize, battleFieldSize)
   c_layer_players = new collie.Layer({ width: worldSize.width,
                                        height: worldSize.height });
   
+  battleField = new collie.DisplayObject({ backgroundColor : '#FFA6C9' });
+  battleField.addTo(c_layer_players);
+  exports.handleBattleFieldChange(battleFieldSize);
+
   collie.Renderer.addLayer(c_layer_players);
   collie.Renderer.load($("#game")[0]);
   collie.Renderer.start("30fps", tick);
 
-  battleField = new collie.DisplayObject({ backgroundColor : '#FFA6C9' });
-  handleBattlefieldChange(battleFieldSize);
-  battleField.addTo(c_layer_players);
 }
 
 function handleBattlefieldChange(battleFieldSize)
