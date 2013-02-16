@@ -5,7 +5,7 @@ var graphics = require('graphics.js');
 var types = require('/types.js');
 var entities = {};
 var worldSize;
-var battleFieldSize;
+var maxWorldSize;
 var pressedKeys = {};
 var startCallback;
 
@@ -31,10 +31,10 @@ exports.sendChatMessage = function (message)
   comm.sendChatMessage(message);
 }
 
-exports.onStepZeroHello = function (_worldSize, _battleFieldSize)
+exports.onStepZeroHello = function (_worldSize, _maxWorldSize)
 {  
   worldSize = _worldSize;
-  battleFieldSize = _battleFieldSize;
+  maxWorldSize = _maxWorldSize;
 }
 
 exports.onStepOneHello = function (error)
@@ -49,12 +49,12 @@ exports.onStepOneHello = function (error)
   document.addEventListener('keyup', handleKeyUp);
 
   // start collie
-  graphics.start(worldSize, battleFieldSize);
+  graphics.start(worldSize, maxWorldSize);
 
   // panels
-  var gamePos = $("#game").position();
-  gameConsole.setPos(battleFieldSize.width + battleFieldSize.x + 10, battleFieldSize.y);
-  playerList.setPos(-50, battleFieldSize.y);
+  var gamePos = graphics.getCurrentGamePos();
+  gameConsole.setPos(gamePos.x + worldSize.width + 10, gamePos.y + 5);
+  playerList.setPos(gamePos.x - 100, gamePos.y + 5);
 }
 
 exports.handleAddEntity = function (entity)

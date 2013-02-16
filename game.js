@@ -14,12 +14,9 @@ var timeStep = 1 / fps;
 var bodies = {};
 
 var mpp = 64;
-var worldSize = { width: 500 / mpp, height: 500 / mpp }
+var worldSize = { width: 333 / mpp, height: 333 / mpp }
+var maxWorldSize = { width: 800 / mpp, height: 800 / mpp }
 var worldCenter = { x: worldSize.width / 2, y: worldSize.height / 2 }
-var battleFieldSize = { x: worldCenter.x - worldSize.width / 3,
-                        y: worldCenter.y - worldSize.height / 3,
-                        width: worldSize.width / 1.5,
-                        height: worldSize.height / 1.5 }
 
 exports.init = function (app)
 {
@@ -33,10 +30,20 @@ exports.init = function (app)
 
 exports.onNewConnection = function (socket)
 {
-  socket.emit('HELLO', { step: 0,
-                         worldSize: { width: worldSize.width * mpp, height: worldSize.height * mpp },
-                         battleFieldSize: { x: battleFieldSize.x * mpp, y: battleFieldSize.y * mpp,
-                                        width: battleFieldSize.width * mpp, height: battleFieldSize.height * mpp } });
+  socket.emit('HELLO',
+    {
+      step: 0,
+      worldSize:
+        {
+          width: worldSize.width * mpp,
+          height: worldSize.height * mpp
+        },
+      maxWorldSize:
+        {
+          width: maxWorldSize.width * mpp,
+          height: maxWorldSize.height * mpp
+        }
+    });
 }
 
 exports.onNewPlayer = function (data, cb)
@@ -169,7 +176,6 @@ exports.onChat = function (id, message)
 function worldStep()
 {
   world.Step(timeStep, 15, 15);
-  checkPlayers();
   
   var _bodies = {};
   
@@ -182,46 +188,53 @@ function worldStep()
         x : pos.x * mpp,
         y : pos.y * mpp
       };
-    
+
     entities[b].x = _bodies[b].x;
     entities[b].y = _bodies[b].y;
+
+    if(entities[b] instanceof types.t_Player)
+    {
+      checkPlayer(b);
+    }
   }
   
   comm.onPhysics(_bodies);
 }
 
-function checkPlayers()
+function checkPlayer(id)
 {
-  for(var id in bodies)
+  var player = entities[id];
+  var body = bodies[id];
+
+  if(player.alive)
   {
-    if(entities[id] instanceof types.t_Player && entities[id].alive)
+    var pos = body.GetPosition();
+
+    if(pos.x + 0.7812 > worldSize.width ||
+       pos.x < 0 ||
+       pos.y + 0.7812 > worldSize.height ||
+       pos.y < 0)
     {
-      var pos = bodies[id].GetPosition();
-      if(pos.x + 50 / mpp > battleFieldSize.x + battleFieldSize.width ||
-         pos.x < battleFieldSize.x ||
-         pos.y + 50 / mpp > battleFieldSize.y + battleFieldSize.height ||
-         pos.y < battleFieldSize.y)
-      {
-        setPosition(id, worldSize.width * mpp - 50, 5);
-        bodies[id].SetLinearVelocity(new Box2D.Common.Math.b2Vec2(-2, 0));
-        entities[id].alive = false;
-        console.info("Player died: name=" + entities[id].name + " id=" + id);
-        comm.broadcast('DIE_ENTITY', { id: id });
-      }
+      setPosition(id, worldSize.width * mpp, worldSize.height * mpp);
+      player.alive = false;
+      player.respawnTimer = 300;
+      body.SetLinearVelocity(new Box2D.Common.Math.b2Vec2(0, 0));
+      console.info("Player died: name=" + player.name + " id=" + id);
+      comm.broadcast('DIE_ENTITY', { id: id });
     }
-    else if(entities[id] instanceof types.t_Player && !entities[id].alive)
+  }
+  else
+  {
+    player.respawnTimer--;
+    if(player.respawnTimer == 0)
     {
-      var pos = bodies[id].GetPosition();
-      if(pos.x <= 0)
-      {
-        setPosition(id, worldCenter.x * mpp - entities[id].width / 2,
-                        worldCenter.x * mpp - entities[id].width / 2);
-        bodies[id].SetLinearVelocity(new Box2D.Common.Math.b2Vec2(0, 0));
-        entities[id].alive = true;
-        entities[id].score--;
-        console.info("Player respawned: name=" + entities[id].name + " id=" + id);
-        comm.broadcast('RESPAWN_ENTITY', { id: id });
-      }
+      setPosition(id, worldCenter.x * mpp - entities[id].width / 2,
+                      worldCenter.x * mpp - entities[id].width / 2);
+      body.SetLinearVelocity(new Box2D.Common.Math.b2Vec2(0, 0));
+      player.alive = true;
+      player.score--;
+      console.info("Player respawned: name=" + entities[id].name + " id=" + id);
+      comm.broadcast('RESPAWN_ENTITY', { id: id });
     }
   }
 }

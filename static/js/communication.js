@@ -41,7 +41,7 @@ function onHello(pak)
   switch(pak.step)
   {
     case 0:
-      game.onStepZeroHello(pak.worldSize, pak.battleFieldSize);
+      game.onStepZeroHello(pak.worldSize, pak.maxWorldSize);
       break;
     case 1:
       game.onStepOneHello(pak.error);

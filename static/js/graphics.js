@@ -1,10 +1,13 @@
 var game;
 var tick;
+var maxWorldSize;
+var currentGamePos;
 
 // collie.js
+var c_layer_static;
 var c_layer_players;
 var c_players = {};
-var battlefield;
+var world;
 
 exports.init = function (_game, _tick)
 {
@@ -12,33 +15,43 @@ exports.init = function (_game, _tick)
   tick = _tick;
 }
 
-exports.start = function (worldSize, battleFieldSize)
+exports.start = function (_worldSize, _maxWorldSize)
 {
-  // collie.js
-  $("#game").css("margin-left", worldSize.width / -2);
-  collie.Renderer.setRenderingMode('dom');
-  c_layer_players = new collie.Layer({ width: worldSize.width,
-                                       height: worldSize.height });
-  
-  battleField = new collie.DisplayObject({ backgroundColor : '#FFA6C9' });
-  battleField.addTo(c_layer_players);
-  exports.handleBattleFieldChange(battleFieldSize);
+  maxWorldSize = _maxWorldSize;
 
+  // center on page, see also game.css
+  $("#game").css("margin-left", _maxWorldSize.width / -2);
+  collie.Renderer.setRenderingMode('dom');
+  c_layer_players = new collie.Layer({ width: maxWorldSize.width,
+                                       height: maxWorldSize.height });
+  c_layer_static = new collie.Layer({ width: maxWorldSize.width,
+                                       height: maxWorldSize.height });
+  
+  world = new collie.DisplayObject({ backgroundColor : '#FFA6C9' });
+  world.addTo(c_layer_static);
+  handleWorldSizeChange(_worldSize);
+
+  collie.Renderer.addLayer(c_layer_static);
   collie.Renderer.addLayer(c_layer_players);
   collie.Renderer.load($("#game")[0]);
   collie.Renderer.start("30fps", tick);
-
 }
 
-function handleBattlefieldChange(battleFieldSize)
+function handleWorldSizeChange(worldSize)
 {
-  battleField.set(
+  currentGamePos = {};
+  currentGamePos.x = maxWorldSize.width / 2 - worldSize.width / 2;
+  currentGamePos.y = 0;
+
+  world.set(
     {
-      width : battleFieldSize.width,
-      height : battleFieldSize.height,
-      x : battleFieldSize.x,
-      y : battleFieldSize.y
+      width : worldSize.width,
+      height : worldSize.height,
+      x : currentGamePos.x,
+      y : currentGamePos.y
     });
+
+  c_layer_players.offset(maxWorldSize.width / 2 - worldSize.width / 2)
 }
 
 exports.addPlayer = function (player)
@@ -80,6 +93,11 @@ exports.setEntityPos = function (entity)
 {
   if(entity instanceof game.types.t_Player)
     setPlayerPos(entity);
+}
+
+exports.getCurrentGamePos = function ()
+{
+  return currentGamePos;
 }
 
 function setPlayerPos(player)
