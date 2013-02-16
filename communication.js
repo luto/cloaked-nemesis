@@ -67,6 +67,7 @@ function newConnection(socket)
   
   socket.on('disconnect', function ()
     {
+      console.debug("Disconnected " + addr + " aka id=" + id);
       if(id == -1)
         return;
       
