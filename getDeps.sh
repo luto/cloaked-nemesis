@@ -2,6 +2,7 @@
 
 npm install socket.io
 npm install node-static
+npm install log4js
 
 rm Box2dWeb-2.1.a.3.js
 wget "https://box2dweb.googlecode.com/files/Box2dWeb-2.1a.3.zip" -O Box2dWeb-2.1a.3.zip

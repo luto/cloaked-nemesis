@@ -23,11 +23,12 @@ var battleFieldSize = { x: worldCenter.x - worldSize.width / 3,
 
 exports.init = function (app)
 {
-  comm.init(app, this);
+  console.info("creating box2d-world..");
   Box2D.Common.b2Settings.b2_velocityThreshold = 0;
   world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 0), false);
-
   tickInterval = setInterval(worldStep, 1000 / fps);
+
+  comm.init(app, this);
 }
 
 exports.onNewConnection = function (socket)
@@ -85,7 +86,10 @@ exports.onNewPlayer = function (data, cb)
   
   nextId++;
   
-  console.log("Player joined: " + player.name + ", " + player.id);
+  console.info("Player joined: name=" + player.name  +
+                               " id=" + player.id    +
+                            " color=" + player.color +
+                              " uid=" + player.uid);
   
   // tell the socket its ID
   cb(player.id, null);
@@ -123,7 +127,7 @@ exports.onNewPlayer = function (data, cb)
 
 exports.onPlayerLeft = function (id)
 {
-  console.log("Player left: " + entities[id].name + ", " + id);
+  console.info("Player left: name=" + entities[id].name + " id=" + id);
   delete entities[id];
   world.DestroyBody(bodies[id]);
   delete bodies[id];
@@ -201,6 +205,7 @@ function checkPlayers()
         setPosition(id, worldSize.width * mpp - 50, 5);
         bodies[id].SetLinearVelocity(new Box2D.Common.Math.b2Vec2(-2, 0));
         entities[id].alive = false;
+        console.info("Player died: name=" + entities[id].name + " id=" + id);
         comm.broadcast('DIE_ENTITY', { id: id });
       }
     }
@@ -214,6 +219,7 @@ function checkPlayers()
         bodies[id].SetLinearVelocity(new Box2D.Common.Math.b2Vec2(0, 0));
         entities[id].alive = true;
         entities[id].score--;
+        console.info("Player respawned: name=" + entities[id].name + " id=" + id);
         comm.broadcast('RESPAWN_ENTITY', { id: id });
       }
     }

@@ -6,6 +6,7 @@ var game;
 exports.init = function(_app, _game)
 {
   game = _game;
+  console.info("starting socket.io..");
   io = socketio.listen(_app);
   io.set('log level', 1);
   io.sockets.on('connection', newConnection);
@@ -30,7 +31,10 @@ exports.emit = function(id, type, data)
 function newConnection(socket)
 {
   var id = -1;
+  var addr = socket.handshake.address;
+  addr = addr.address + ":" + addr.port;
 
+  console.debug("New connection from " + addr);
   game.onNewConnection(socket);
   
   socket.on('HELLO', function (data)
@@ -46,10 +50,12 @@ function newConnection(socket)
         {
           if(error)
           {
+            console.debug("Invalid hello from " + addr + ", error: " + error);
             socket.emit('HELLO', { step: 1, error: error });
           }
           else
           {
+            console.debug("Valid hello from " + addr + " aka id=" + newId);
             socket.emit('HELLO', { step: 1, error: null });
             id = newId;
             sockets[id] = socket;
