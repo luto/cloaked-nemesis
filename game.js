@@ -181,6 +181,11 @@ function worldStep()
   
   for(var b in bodies)
   {
+    if(entities[b] instanceof types.t_Player)
+    {
+      checkPlayer(b);
+    }
+
     var pos = bodies[b].GetPosition();
     
     _bodies[b] =
@@ -191,11 +196,6 @@ function worldStep()
 
     entities[b].x = _bodies[b].x;
     entities[b].y = _bodies[b].y;
-
-    if(entities[b] instanceof types.t_Player)
-    {
-      checkPlayer(b);
-    }
   }
   
   comm.onPhysics(_bodies);
