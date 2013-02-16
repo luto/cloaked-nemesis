@@ -106,9 +106,8 @@
 
       if($.getQuery().nick)
       {
-        $('#login').hide();
-        $('#game').show();
-        setTimeout(function () { game.start($.getQuery().nick); }, 500);
+        $("#login-nickname").val($.getQuery().nick);
+        connect();
       }
       else
       {
