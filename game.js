@@ -210,10 +210,10 @@ function checkPlayer(id)
   {
     var pos = body.GetPosition();
 
-    if(pos.x + 0.7812 > worldSize.width ||
-       pos.x < 0 ||
-       pos.y + 0.7812 > worldSize.height ||
-       pos.y < 0)
+    if(pos.x + 0.5 > worldSize.width ||
+       pos.x < -0.3 ||
+       pos.y + 0.5 > worldSize.height ||
+       pos.y < -0.3)
     {
       setPosition(id, worldSize.width * mpp, worldSize.height * mpp);
       player.alive = false;
