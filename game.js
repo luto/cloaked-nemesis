@@ -1,5 +1,6 @@
 var comm = require('./communication.js');
 var types = require('./types.js');
+var sutil = require('./shared-util.js');;
 require('./Box2dWeb-2.1.a.3.js');
 
 // entities
@@ -48,7 +49,7 @@ exports.onNewConnection = function (socket)
 
 exports.onNewPlayer = function (data, cb)
 {
-  if(!data.name.match(/^[a-zA-ZüäöÜÄÖß]+$/) || data.name.length > 10)
+  if(!data.name.match(sutil.nameRegex))
   {
     cb(null, "nickname-invalid");
     return;
@@ -169,7 +170,12 @@ exports.onMove = function (id, direction)
 
 exports.onChat = function (id, message)
 {
-  comm.onChat(id, message);
+  var player = entities[id];
+  if(sutil.checkChatMsg(player.lastChatMsg, message))
+  {
+    player.lastChatMsg = +new Date();
+    comm.onChat(id, message);
+  }
 }
 
 function worldStep()

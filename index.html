@@ -87,20 +87,24 @@
       require.setRootURI('http://' + window.location.hostname + ':' + window.location.port);
       
       var game = require('game.js');
+      sutil = require('/shared-util.js');
       game.init();
 
+      var lastChatMsg = null;
       $('#chat-txt').keypress(function (e)
         {
           if (e.which == 13)
           {
-            e.preventDefault();
+            var msg = $('#chat-txt').val();
 
-            if($('#chat-txt').val().length != 0)
+            if(sutil.checkChatMsg(lastChatMsg, msg))
             {
-              game.sendChatMessage($('#chat-txt').val());
+              lastChatMsg = +new Date();
+              game.sendChatMessage(msg);
               $('#chat-txt').val('');
             }
 
+            e.preventDefault();
             return false;
           }
         });
@@ -131,7 +135,7 @@
         var name = prefs.name;
         var color = prefs.color;
 
-        if(!name.match(/^[a-zA-ZüäöÜÄÖß]+$/) || name > 10)
+        if(!name.match(sutil.nameRegex))
         {
           $("#login").css('background-color', '#F44');
           return;

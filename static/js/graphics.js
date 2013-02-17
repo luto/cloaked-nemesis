@@ -27,7 +27,7 @@ exports.start = function (_worldSize, _maxWorldSize)
   c_layer_static = new collie.Layer({ width: maxWorldSize.width,
                                        height: maxWorldSize.height });
   
-  world = new collie.DisplayObject({ backgroundColor : '#FFA6C9' });
+  world = new collie.DisplayObject({ backgroundColor : sutil.backColor });
   world.addTo(c_layer_static);
   handleWorldSizeChange(_worldSize);
 
