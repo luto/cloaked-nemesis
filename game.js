@@ -32,8 +32,13 @@ exports.init = function (app)
 
 function setWorldSize (_worldSize)
 {
+  if(_worldSize.width > maxWorldSize.width)
+    _worldSize.width = maxWorldSize.width;
+  if(_worldSize.height > maxWorldSize.height)
+    _worldSize.height = maxWorldSize.height;
+
   worldSize = _worldSize;
-  console.info("The world is now " + worldSize.width + "," + worldSize.height + " big");
+  console.info("The world is now " + Math.floor(worldSize.width * mpp) + "," + Math.floor(worldSize.height * mpp) + " big");
   worldCenter = { x: worldSize.width / 2, y: worldSize.height / 2 };
   if(worldSize != null)
   {
@@ -146,6 +151,7 @@ exports.onNewPlayer = function (data, cb)
   
   // show the old clients the new client
   comm.onAddEntity(player);
+  setWorldSize({ width: worldSize.width + 0.17, height: worldSize.height + 0.17 });
 }
 
 exports.onPlayerLeft = function (id)
@@ -155,6 +161,7 @@ exports.onPlayerLeft = function (id)
   world.DestroyBody(bodies[id]);
   delete bodies[id];
   comm.onRemoveEntity(id);
+  setWorldSize({ width: worldSize.width - 0.17, height: worldSize.height - 0.17 });
 }
 
 exports.onMove = function (id, direction)
