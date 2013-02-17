@@ -125,3 +125,8 @@ exports.onRemoveEntity = function (id)
 {
   exports.broadcast('REMOVE_ENTITY', { id: id });
 }
+
+exports.onWorldSizeChanged = function (worldSize)
+{
+  exports.broadcast('WORLDSIZE_CHANGED', { worldSize: worldSize });
+}

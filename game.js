@@ -15,18 +15,34 @@ var timeStep = 1 / fps;
 var bodies = {};
 
 var mpp = 64;
-var worldSize = { width: 333 / mpp, height: 333 / mpp }
-var maxWorldSize = { width: 800 / mpp, height: 800 / mpp }
-var worldCenter = { x: worldSize.width / 2, y: worldSize.height / 2 }
+var worldSize;
+var worldCenter;
+var maxWorldSize = { width: 800 / mpp, height: 800 / mpp };
 
 exports.init = function (app)
 {
+  setWorldSize({ width: 333 / mpp, height: 333 / mpp });
   console.info("creating box2d-world..");
   Box2D.Common.b2Settings.b2_velocityThreshold = 0;
   world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 0), false);
   tickInterval = setInterval(worldStep, 1000 / fps);
 
   comm.init(app, this);
+}
+
+function setWorldSize (_worldSize)
+{
+  worldSize = _worldSize;
+  console.info("The world is now " + worldSize.width + "," + worldSize.height + " big");
+  worldCenter = { x: worldSize.width / 2, y: worldSize.height / 2 };
+  if(worldSize != null)
+  {
+    comm.onWorldSizeChanged(
+        {
+          width: worldSize.width * mpp,
+          height: worldSize.height * mpp
+        });
+  }
 }
 
 exports.onNewConnection = function (socket)

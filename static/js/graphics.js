@@ -29,7 +29,6 @@ exports.start = function (_worldSize, _maxWorldSize)
   
   world = new collie.DisplayObject({ backgroundColor : sutil.backColor });
   world.addTo(c_layer_static);
-  handleWorldSizeChange(_worldSize);
 
   collie.Renderer.addLayer(c_layer_static);
   collie.Renderer.addLayer(c_layer_players);
@@ -37,7 +36,7 @@ exports.start = function (_worldSize, _maxWorldSize)
   collie.Renderer.start("30fps", tick);
 }
 
-function handleWorldSizeChange(worldSize)
+exports.handleWorldSizeChanged = function (worldSize)
 {
   currentGamePos = {};
   currentGamePos.x = maxWorldSize.width / 2 - worldSize.width / 2;

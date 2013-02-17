@@ -71,6 +71,9 @@ function onPacket(pak)
     case "CHAT":
       game.handleChat(pak.data.sender, pak.data.message);
       break;
+    case "WORLDSIZE_CHANGED":
+      game.handleWorldSizeChanged(pak.data.worldSize);
+      break;
   }
 }
 

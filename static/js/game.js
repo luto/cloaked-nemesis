@@ -50,11 +50,7 @@ exports.onStepOneHello = function (error)
 
   // start collie
   graphics.start(worldSize, maxWorldSize);
-
-  // panels
-  var gamePos = graphics.getCurrentGamePos();
-  gameConsole.setPos(gamePos.x + worldSize.width + 10, gamePos.y + 5);
-  playerList.setPos(gamePos.x - 100, gamePos.y + 5);
+  exports.handleWorldSizeChanged(worldSize);
 }
 
 exports.handleAddEntity = function (entity)
@@ -123,6 +119,16 @@ exports.handleChat = function (sender, message)
 {
   var name = entities[sender].name;
   gameConsole.chatMessage(name, message);
+}
+
+exports.handleWorldSizeChanged = function (_worldSize)
+{
+  worldSize = _worldSize;
+
+  graphics.handleWorldSizeChanged(worldSize);
+  var gamePos = graphics.getCurrentGamePos();
+  gameConsole.setPos(gamePos.x + worldSize.width + 10, gamePos.y + 5);
+  playerList.setPos(gamePos.x - 100, gamePos.y + 5);
 }
 
 function handleKeyUp(evt)
