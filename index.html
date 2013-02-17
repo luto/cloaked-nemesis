@@ -140,6 +140,11 @@
           $("#login").css('background-color', '#F44');
           return;
         }
+        if(color == sutil.backColor)
+        {
+          alert("Please use an other color.");
+          return;
+        }
         $("#login").css('background-color', '');
 
         game.start(name, color, uid, gameStarted);

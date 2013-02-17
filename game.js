@@ -55,7 +55,7 @@ exports.onNewPlayer = function (data, cb)
     return;
   }
 
-  if(!data.color.match(/^#[a-zA-Z0-9]{6}$/))
+  if(!data.color.match(/^#[a-zA-Z0-9]{6}$/) || data.color == sutil.backColor)
   {
     cb(null, "color-invalid");
     return;
