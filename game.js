@@ -75,13 +75,6 @@ exports.onNewPlayer = function (data, cb)
         cb(null, "nickname-doubled");
         return;
       }
-    }
-  }
-
-  for(var id in entities)
-  {
-    if(entities[id] instanceof types.t_Player)
-    {
       if(entities[id].uid == data.uid)
       {
         cb(null, "user-doubled");
