@@ -27,7 +27,7 @@ exports.checkColor = function (color)
   var back = compareColor(new RGBColor(color), objBackColor);
   var white = compareColor(new RGBColor(color), objWhiteColor);
 
-  if(back < 10)
+  if(back < 22)
     return false;
   if(white < 30)
     return false;
