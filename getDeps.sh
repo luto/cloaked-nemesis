@@ -1,21 +1,27 @@
 #!/bin/sh
 
+alias sed='sed -i'
+if [ ${OSTYPE//[0-9.]/} == 'darwin' ]; then
+        alias sed="sed -i ''"
+fi
+
+# server libs
 npm install socket.io
 npm install node-static
 npm install log4js
 
+# Box2dweb
 rm Box2dWeb-2.1.a.3.js
 wget "https://box2dweb.googlecode.com/files/Box2dWeb-2.1a.3.zip" -O Box2dWeb-2.1a.3.zip
 unzip Box2dWeb-2.1a.3.zip Box2dWeb-2.1.a.3.js
+sed "s/var Box2D = {};/Box2D = {};/" Box2dWeb-2.1.a.3.js
 rm Box2dWeb-2.1a.3.zip
 
-alias sed='sed -i'
-if [ ${OSTYPE//[0-9.]/} == 'darwin' ]; then
-	alias sed="sed -i ''"
-fi
+# rgbcolor.js
+wget "http://www.phpied.com/files/rgbcolor/rgbcolor.js" -O rgbcolor.js
+sed "s/function RGBColor(color_string)/exports.RGBColor = function (color_string)/" rgbcolor.js
 
-sed "s/var Box2D = {};/Box2D = {};/" Box2dWeb-2.1.a.3.js
-
+# client libs
 cd static
 
 mkdir js

@@ -1,6 +1,6 @@
 var comm = require('./communication.js');
 var types = require('./types.js');
-var sutil = require('./shared-util.js');;
+var sutil = require('./shared-util.js');
 require('./Box2dWeb-2.1.a.3.js');
 
 // entities
@@ -76,7 +76,7 @@ exports.onNewPlayer = function (data, cb)
     return;
   }
 
-  if(!data.color.match(/^#[a-zA-Z0-9]{6}$/) || data.color == sutil.backColor)
+  if(!data.color.match(/^#[a-zA-Z0-9]{6}$/) || !sutil.checkColor(data.color))
   {
     cb(null, "color-invalid");
     return;

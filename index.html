@@ -140,7 +140,7 @@
           $("#login").css('background-color', '#F44');
           return;
         }
-        if(color == sutil.backColor)
+        if(!sutil.checkColor(color))
         {
           alert("Please use an other color.");
           return;
@@ -160,8 +160,7 @@
         }
         else if(error == "color-invalid")
         {
-          // should not happen without client manipualtions
-          alert("Your color was invalid. This should not happen. Please contact me.");
+          alert("Please use an other color.");
           return;
         }
         else if(error == "user-doubled")
