@@ -11,11 +11,8 @@ npm install node-static
 npm install log4js
 
 # Box2dweb
-rm Box2dWeb-2.1.a.3.js
-wget "https://box2dweb.googlecode.com/files/Box2dWeb-2.1a.3.zip" -O Box2dWeb-2.1a.3.zip
-unzip Box2dWeb-2.1a.3.zip Box2dWeb-2.1.a.3.js
-sed "s/var Box2D = {};/Box2D = {};/" Box2dWeb-2.1.a.3.js
-rm Box2dWeb-2.1a.3.zip
+wget "https://raw.githubusercontent.com/hecht-software/box2dweb/v2.1a.4/Box2D.js" -O Box2dWeb-2.1.a.4.js
+sed "s/var Box2D = {};/Box2D = {};/" Box2dWeb-2.1.a.4.js
 
 # rgbcolor.js
 wget "http://www.phpied.com/files/rgbcolor/rgbcolor.js" -O rgbcolor.js
@@ -30,7 +27,7 @@ wget "http://jindo.dev.naver.com/collie/download.php?name=collie.min" -O collie.
 wget "http://code.jquery.com/jquery-1.9.0.min.js" -O jquery-1.9.0.min.js
 wget "https://raw.github.com/mattsnider/jquery-plugin-query-parser/master/jquery-queryParser.min.js" -O jquery-queryParser.min.js
 wget "https://raw.github.com/claviska/jquery-miniColors/master/jquery.minicolors.js" -O jquery.minicolors.js
-wget "https://raw.github.com/carhartl/jquery-cookie/master/jquery.cookie.js" -O jquery.cookie.js
+wget "https://raw.githubusercontent.com/carhartl/jquery-cookie/master/src/jquery.cookie.js" -O jquery.cookie.js
 cd ..
 
 mkdir img

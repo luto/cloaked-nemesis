@@ -1,7 +1,7 @@
 var comm = require('./communication.js');
 var types = require('./types.js');
 var sutil = require('./shared-util.js');
-require('./Box2dWeb-2.1.a.3.js');
+require('./Box2dWeb-2.1.a.4.js');
 
 // entities
 var nextId = 0;
